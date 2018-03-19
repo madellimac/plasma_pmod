@@ -61,3 +61,5 @@
 `0x400004BC` : OLED nibblemap data  
 `0x400004D0` : OLED sigplot reset  
 `0x400004D8` : OLED sigplot data  
+
+`0x40000500` : UART PMOD

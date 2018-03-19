@@ -29,6 +29,9 @@
 #define IRQ_MASK          0x20000010
 #define IRQ_STATUS        0x20000020
 
+#define UART_PMOD_WRITE   0x40000500
+#define UART_PMOD_READ    0x40000500
+
 #define MemoryRead(A)   (*(volatile unsigned int*)(A))
 #define MemoryWrite(A,V) *(volatile unsigned int*)(A)=(V)
 

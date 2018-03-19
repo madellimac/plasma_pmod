@@ -78,7 +78,8 @@ entity plasma is
    generic(memory_type : string := "XILINX_16X"; --"DUAL_PORT_" "ALTERA_LPM";
            log_file    : string := "UNUSED";
            ethernet    : std_logic;
-           eUart       : std_logic; --UART_PMOD MODIF HERE
+           eUart       : std_logic; 
+           eUartPmod   : std_logic; --UART_PMOD MODIF HERE
            eButtons    : std_logic;
            eRGBOLED    : std_logic;
            eSwitchLED  : std_logic;
@@ -95,7 +96,10 @@ entity plasma is
 				reset        : in std_logic;
 
 				uart_write   : out std_logic;
-				uart_read    : in std_logic;	--UART_PMOD MODIF HERE
+				uart_read    : in std_logic;	
+				
+				uart_pmod_write   : out std_logic; --UART_PMOD MODIF HERE
+				uart_pmod_read    : in std_logic;
 
 				address      : out std_logic_vector(31 downto 2);
 				byte_we      : out std_logic_vector(3  downto 0);
@@ -176,7 +180,8 @@ architecture logic of plasma is
 
    signal ppcie_rdata       : std_logic_vector(31 downto 0);
 
-   signal data_read_uart    : std_logic_vector(7 downto 0); --UART_PMOD MODIF HERE
+   signal data_read_uart    : std_logic_vector(7 downto 0);
+   signal data_read_uart_pmod    : std_logic_vector(7 downto 0); --UART_PMOD MODIF HERE
    signal data_vga_read     : std_logic_vector(31 downto 0);
    signal write_enable      : std_logic;
    signal eth_pause_in      : std_logic;
@@ -186,7 +191,10 @@ architecture logic of plasma is
    signal enable_misc       : std_logic;
    signal enable_uart       : std_logic;
    signal enable_uart_read  : std_logic;
-   signal enable_uart_write : std_logic; --UART_PMOD MODIF HERE
+   signal enable_uart_write : std_logic;
+   signal enable_uart_pmod       : std_logic; --UART_PMOD MODIF HERE
+   signal enable_uart_pmod_read  : std_logic;
+   signal enable_uart_pmod_write : std_logic;
    signal enable_eth        : std_logic;
    signal enable_local_mem  : std_logic;
    signal enable_buttons    : std_logic;
@@ -265,10 +273,11 @@ architecture logic of plasma is
 
    signal gpio0_reg         : std_logic_vector(31 downto 0);
    signal uart_write_busy   : std_logic;
-   signal uart_data_avail   : std_logic; 
+   signal uart_data_avail   : std_logic;
+   signal uart_pmod_write_busy   : std_logic;
+   signal uart_pmod_data_avail   : std_logic;  --UART_PMOD MODIF HERE
    signal irq_mask_reg      : std_logic_vector(7 downto 0);
-   signal irq_status        : std_logic_vector(7 downto 0); --UART_PMOD MODIF HERE
-   signal irq               : std_logic;
+   signal irq_status        : std_logic_vector(7 downto 0); --UART_PMOD MODIF NEEDED
    signal irq_eth_rec       : std_logic;
    signal irq_eth_send      : std_logic;
    signal counter_reg       : std_logic_vector(31 downto 0);
@@ -500,6 +509,7 @@ begin  --architecture
    mem_busy     <= eth_pause;-- or mem_pause_in;
    cache_hit    <= cache_checking and not cache_miss;
    cpu_pause    <= (uart_write_busy and enable_uart and write_enable)    --UART busy
+				   or (uart_pmod_write_busy and enable_uart_pmod and write_enable)
 --						 or  cache_miss                                        --Cache wait
 --                   or (cpu_address(31) and not cache_hit and mem_busy);  --DDR or flash
                    or (eth_pause);  -- DMA ENGINE FREEZE ALL (BLG)
@@ -567,7 +577,10 @@ begin  --architecture
 
    oledsigplot_reset <= '1' when (cpu_address = x"400004D0") AND (cpu_pause = '0') else '0';
    oledsigplot_valid <= '1' when (cpu_address = x"400004D8") AND (cpu_pause = '0') AND (write_enable = '1') else '0';
-
+   
+   enable_uart_pmod             <= '1' when enable_misc = '1' and (cpu_address(8 downto 4) = x"40000500") else '0'; 
+   enable_uart_pmod_read        <= enable_uart_pmod and not write_enable;	--UART_PMOD MODIF HERE (signal link)
+   enable_uart_pmod_write       <= enable_uart_pmod and write_enable;
 --   assert cop_4_valid /= '1' severity failure;
 	--
 	-- ON LIT/ECRIT DANS LA MEMOIRE LOCALE UNIQUEMENT LORSQUE LE BUS
