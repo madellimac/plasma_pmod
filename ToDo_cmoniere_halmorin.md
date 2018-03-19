@@ -10,7 +10,7 @@ développé sur processeur softcore [Plasma](https://opencores.org/project,plasm
 
 * Mettre à jour le [XDC](SYNTHESIS/nexys4.xdc) (sur le connecteur *JC*).
 
-* Créer le fichier source (C/C++) (et *header* eventuel) pour le gps utilisant l'uart pmod.
+* Créer le fichier source (*C* pour le support, *C++* peut être plus tard) (et *header* eventuel) pour le gps utilisant l'uart pmod.
 
 ## Fait :
 
