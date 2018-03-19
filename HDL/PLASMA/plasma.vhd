@@ -78,7 +78,7 @@ entity plasma is
    generic(memory_type : string := "XILINX_16X"; --"DUAL_PORT_" "ALTERA_LPM";
            log_file    : string := "UNUSED";
            ethernet    : std_logic;
-           eUart       : std_logic;
+           eUart       : std_logic; --UART_PMOD MODIF HERE
            eButtons    : std_logic;
            eRGBOLED    : std_logic;
            eSwitchLED  : std_logic;
@@ -95,7 +95,7 @@ entity plasma is
 				reset        : in std_logic;
 
 				uart_write   : out std_logic;
-				uart_read    : in std_logic;
+				uart_read    : in std_logic;	--UART_PMOD MODIF HERE
 
 				address      : out std_logic_vector(31 downto 2);
 				byte_we      : out std_logic_vector(3  downto 0);
@@ -176,7 +176,7 @@ architecture logic of plasma is
 
    signal ppcie_rdata       : std_logic_vector(31 downto 0);
 
-   signal data_read_uart    : std_logic_vector(7 downto 0);
+   signal data_read_uart    : std_logic_vector(7 downto 0); --UART_PMOD MODIF HERE
    signal data_vga_read     : std_logic_vector(31 downto 0);
    signal write_enable      : std_logic;
    signal eth_pause_in      : std_logic;
@@ -186,7 +186,7 @@ architecture logic of plasma is
    signal enable_misc       : std_logic;
    signal enable_uart       : std_logic;
    signal enable_uart_read  : std_logic;
-   signal enable_uart_write : std_logic;
+   signal enable_uart_write : std_logic; --UART_PMOD MODIF HERE
    signal enable_eth        : std_logic;
    signal enable_local_mem  : std_logic;
    signal enable_buttons    : std_logic;
@@ -265,9 +265,9 @@ architecture logic of plasma is
 
    signal gpio0_reg         : std_logic_vector(31 downto 0);
    signal uart_write_busy   : std_logic;
-   signal uart_data_avail   : std_logic;
+   signal uart_data_avail   : std_logic; 
    signal irq_mask_reg      : std_logic_vector(7 downto 0);
-   signal irq_status        : std_logic_vector(7 downto 0);
+   signal irq_status        : std_logic_vector(7 downto 0); --UART_PMOD MODIF HERE
    signal irq               : std_logic;
    signal irq_eth_rec       : std_logic;
    signal irq_eth_send      : std_logic;
@@ -513,8 +513,8 @@ begin  --architecture
    gpio0_out(23 downto 0)  <= gpio0_reg(23 downto 0);
 
    enable_misc             <= '1' when cpu_address(30 downto 28) = "010" else '0';
-   enable_uart             <= '1' when enable_misc = '1' and cpu_address(8 downto 4) = "00000" else '0';
-   enable_uart_read        <= enable_uart and not write_enable;
+   enable_uart             <= '1' when enable_misc = '1' and cpu_address(8 downto 4) = "00000" else '0'; 
+   enable_uart_read        <= enable_uart and not write_enable;	--UART_PMOD MODIF HERE (signal link)
    enable_uart_write       <= enable_uart and write_enable;
    enable_eth              <= '1' when enable_misc = '1' and cpu_address(8 downto 4) = "00111" else '0';
    enable_vga <= '1' when enable_misc = '1' and cpu_address(8 downto 4) = "10010" else '0';
@@ -682,10 +682,10 @@ begin  --architecture
 				cpu_data_r <= ram_data_lm;
 
 			-- ON LIT LES DONNEES DES PERIPHERIQUES MISC.
-	when "010" =>         --misc
+		when "010" =>         --misc
          	case cpu_address(8 downto 4) is
          		when "00000" =>      --uart
-         		   cpu_data_r <= ZERO(31 downto 8) & data_read_uart;
+         		   cpu_data_r <= ZERO(31 downto 8) & data_read_uart;  
         		when "00001" =>      --irq_mask
             		cpu_data_r <= ZERO(31 downto 8) & irq_mask_reg;
          		when "00010" =>      --irq_status
@@ -696,10 +696,10 @@ begin  --architecture
             		cpu_data_r <= gpioA_in;
          		when "00110" =>      --counter
             		cpu_data_r <= counter_reg;
-            		when "10010" => -- vga
+            	when "10010" => -- vga
             	  	cpu_data_r <= data_vga_read;
-			when others =>		 -- ce n'est pas pr\E9vu...
-			cpu_data_r <= x"FFFFFFFF";
+				when others =>		 -- ce n'est pas pr\E9vu...
+					cpu_data_r <= x"FFFFFFFF";
 		end case;
 
 			-- ON LIT LES DONNEES EN PROVENANCE DU PCIe 0x3....XX
@@ -724,7 +724,7 @@ begin  --architecture
 	when "100" =>
 		case cpu_address is
 			when x"400000C4" => cpu_data_r <= ctrl_SL_output;
-			when x"40000100" => cpu_data_r <= buttons_values;
+			when x"40000100" => cpu_data_r <= buttons_values;	--UART_PMOD MODIF HERE
 			when x"40000104" => cpu_data_r <= buttons_change;
 			when x"40000300" => cpu_data_r <= i2c_addr;
 			when x"40000304" => cpu_data_r <= i2c_status;
@@ -837,7 +837,7 @@ begin  --architecture
          reset        => reset,
          enable_read  => enable_uart_read,
          enable_write => enable_uart_write,
-         data_in      => cpu_data_w(7 downto 0),
+         data_in      => cpu_data_w(7 downto 0), --UART_PMOD MODIF HERE (new controller unit)
          data_out     => data_read_uart,
          uart_read    => uart_read,
          uart_write   => uart_write,
@@ -1066,17 +1066,17 @@ begin  --architecture
          	dma_data_read <= ram_data_r;
       	when "001" =>         --external (local) RAM
 				dma_data_read <= ram_data_lm;
-			when "010" =>         --misc
+		when "010" =>         --misc
          	case dma_address(6 downto 4) is
-         		when "000" =>  dma_data_read <= ZERO(31 downto 8) & data_read_uart;
-        		 	when "001" =>  dma_data_read <= ZERO(31 downto 8) & irq_mask_reg;
+         		when "000" =>  dma_data_read <= ZERO(31 downto 8) & data_read_uart; --UART_PMOD MODIF HERE
+        		when "001" =>  dma_data_read <= ZERO(31 downto 8) & irq_mask_reg;
          		when "010" =>  dma_data_read <= ZERO(31 downto 8) & irq_status;
          		when "011" =>  dma_data_read <= gpio0_reg;
          		when "101" =>  dma_data_read <= gpioA_in;
          		when "110" =>  dma_data_read <= counter_reg;
-					when others =>	dma_data_read <= x"FFFFFFFF";
+				when others =>	dma_data_read <= x"FFFFFFFF";
 				end case;
-			when "011" =>
+		when "011" =>
          	case dma_address(7 downto 4) is
 					when "0000"  => dma_data_read <= ZERO(31 downto 1) & fifo_1_empty;
 					when "0001"  => dma_data_read <= ZERO(31 downto 1) & fifo_2_empty;
