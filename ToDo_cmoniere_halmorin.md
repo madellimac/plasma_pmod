@@ -22,10 +22,10 @@ développé sur processeur softcore [Plasma](https://opencores.org/project,plasm
 
 * Mettre à jour le [Makefile](Makefile) ( clef : ***#UART_PMOD MODIF HERE***).
 
-* Ajouter un composant uart concurrent dans [plasma.vhd](HDL/PLASMA/plasma.vhd)  en actualisant le [top level du plasma](HDL/PLASMA/top_plasma.vhd). 
+* Ajouter un composant uart concurrent dans [plasma.vhd](HDL/PLASMA/plasma.vhd)  en actualisant le [top level du plasma](HDL/PLASMA/top_plasma.vhd).
 
 * Modifications du [plasma.vhd](HDL/PLASMA/plasma.vhd) avec ajout du commentaire ***--UART_PMOD MODIF HERE*** ou ***--UART_PMOD HEAVY MODIF HERE !!*** en fonction de la criticité du changement.
 
-* Ajouter les adresse de l'uart pmod dans [plasma.h](C/shared/plasma.h).
+* Ajouter les adresses de l'uart pmod dans [plasma.h](C/shared/plasma.h).
 
 * Comprendre.
