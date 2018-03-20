@@ -285,7 +285,8 @@ architecture logic of plasma is
    signal uart_pmod_data_avail   : std_logic;  --UART_PMOD MODIF HERE
    
    signal irq_mask_reg      : std_logic_vector(7 downto 0);
-   signal irq_status        : std_logic_vector(7 downto 0); 
+   signal irq_status        : std_logic_vector(7 downto 0);
+   signal irq				: std_logic; 
    signal irq_eth_rec       : std_logic;
    signal irq_eth_send      : std_logic;
    signal counter_reg       : std_logic_vector(31 downto 0);
