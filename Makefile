@@ -192,6 +192,7 @@ CONFIG_RGB_OLED ?= yes
 CONFIG_SWITCH_LED ?= yes
 CONFIG_SEVEN_SEGMENTS ?= yes
 CONFIG_I2C ?= yes
+CONFIG_UART_PMOD ?= no #UART_PMOD MODIF HERE
 
 ifeq ($(CONFIG_PROJECT),hello)
 PROJECT = $(HELLO)
@@ -229,6 +230,16 @@ PLASMA_SOC_GENERICS += eUart=1'b1
 PLASMA_SOC_FILES += uart.vhd
 else
 PLASMA_SOC_GENERICS += eUart=1'b0
+endif
+
+ifeq ($(CONFIG_UART_PMOD),yes)          #UART_PMOD MODIF HERE
+PLASMA_SOC_GENERICS += eUartPmod=1'b1
+ifeq ($(CONFIG_UART),yes)       
+else
+PLASMA_SOC_FILES += uart.vhd            #Should not add uart.vhd twice.
+endif
+else
+PLASMA_SOC_GENERICS += eUartPmod=1'b0
 endif
 
 ifeq ($(CONFIG_BUTTONS),yes)
