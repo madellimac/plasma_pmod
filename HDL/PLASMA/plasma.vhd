@@ -323,8 +323,7 @@ architecture logic of plasma is
    signal cache_miss        : std_logic;
    signal cache_hit         : std_logic;
 
-   signal one_uart_write_busy : std_logic; --UART_PMOD HEAVY MODIF HERE !!
-   signal one_uart_data_avail : std_logic;
+   signal uart_pmod_status  : std_logic_vector(1 downto 0);
 	
 	COMPONENT memory_64k
     Port ( clk       : in   STD_LOGIC;
@@ -514,16 +513,6 @@ begin  --architecture
 
    --seg <= "1011010";
    --an <= sw(7 downto 0);
-   u_uart_pmod_protect : process( uart_data_avail, uart_write_busy, uart_pmod_data_avail, uart_pmod_write_busy)
-   begin
-		if eUartPmod = '1' then
-			one_uart_write_busy <= uart_write_busy or uart_pmod_write_busy; --UART_PMOD HEAVY MODIF HERE !!
-			one_uart_data_avail <= uart_data_avail or uart_pmod_data_avail;
-		else
-			one_uart_write_busy <= uart_write_busy;
-			one_uart_data_avail <= uart_data_avail;
-		end if;
-   end process;
 			
    write_enable <= '1' when cpu_byte_we /= "0000" else '0';
    mem_busy     <= eth_pause;-- or mem_pause_in;
@@ -538,9 +527,11 @@ begin  --architecture
    irq_status   <= gpioA_in(31) & not gpioA_in(31) &				--UART_PMOD HEAVY MODIF HERE !!
                         irq_eth_send & irq_eth_rec &
                         counter_reg(18) & not counter_reg(18) &
-                        not one_uart_write_busy & one_uart_data_avail;
+                        not uart_write_busy & uart_data_avail;
    irq          <= '1' when (irq_status and irq_mask_reg) /= ZERO(7 downto 0) else '0';
 
+   uart_pmod_status <= not uart_pmod_write_busy & uart_pmod_data_avail; --UART_PMOD MODIF HERE 
+   
    gpio0_out(31 downto 29) <= gpio0_reg(31 downto 29);
    gpio0_out(23 downto 0)  <= gpio0_reg(23 downto 0);
 
@@ -600,7 +591,7 @@ begin  --architecture
    oledsigplot_reset <= '1' when (cpu_address = x"400004D0") AND (cpu_pause = '0') else '0';
    oledsigplot_valid <= '1' when (cpu_address = x"400004D8") AND (cpu_pause = '0') AND (write_enable = '1') else '0';
    
-   enable_uart_pmod             <= '1' when enable_misc = '1' and (cpu_address(8 downto 4) = x"40000500") else '0'; 
+   enable_uart_pmod             <= '1' when enable_misc = '1' and (cpu_address = x"40000500") else '0'; 
    enable_uart_pmod_read        <= enable_uart_pmod and not write_enable;	--UART_PMOD MODIF HERE (signal link)
    enable_uart_pmod_write       <= enable_uart_pmod and write_enable;
    
@@ -721,19 +712,19 @@ begin  --architecture
 		when "010" =>         --misc
          	case cpu_address(8 downto 4) is
          		when "00000" =>      --uart
-         		   cpu_data_r <= ZERO(31 downto 8) & data_read_uart;  
+                          cpu_data_r <= ZERO(31 downto 8) & data_read_uart;  
         		when "00001" =>      --irq_mask
-            		cpu_data_r <= ZERO(31 downto 8) & irq_mask_reg;
+                          cpu_data_r <= ZERO(31 downto 8) & irq_mask_reg;
          		when "00010" =>      --irq_status
-         		   cpu_data_r <= ZERO(31 downto 8) & irq_status;
+         		  cpu_data_r <= ZERO(31 downto 8) & irq_status;
          		when "00011" =>      --gpio0
-            		cpu_data_r <= gpio0_reg;
+                          cpu_data_r <= gpio0_reg;
          		when "00101" =>      --gpioA
-            		cpu_data_r <= gpioA_in;
+                          cpu_data_r <= gpioA_in;
          		when "00110" =>      --counter
-            		cpu_data_r <= counter_reg;
-            	when "10010" => -- vga
-            	  	cpu_data_r <= data_vga_read;
+                          cpu_data_r <= counter_reg;
+                        when "10010" => -- vga
+                          cpu_data_r <= data_vga_read;
 				when others =>		 -- ce n'est pas pr\E9vu...
 					cpu_data_r <= x"FFFFFFFF";
 		end case;
@@ -771,7 +762,9 @@ begin  --architecture
 			when x"400004AC" => cpu_data_r <= oledterminal_output;
 			when x"400004B8" => cpu_data_r <= oledbitmap_output;
 			when x"400004D8" => cpu_data_r <= oledsigplot_output;
-			when x"40000500" => cpu_data_r <= ZERO(31 downto 8) & data_read_uart_pmod; --UART_PMOD MODIF HERE
+                        when x"40000500" => cpu_data_r <= ZERO(31 downto 8) & data_read_uart_pmod; --UART_PMOD MODIF HERE
+                        when x"40000504" => cpu_data_r <= ZERO(31 downto 2) & uart_pmod_status;
+                                      
 			when others => cpu_data_r <= x"FFFFFFFF";
 		end case;
 
