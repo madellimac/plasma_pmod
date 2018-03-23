@@ -519,3 +519,4 @@ simu: simulation
 clean:
 	rm -rf $(BUILD_DIRS)
 	rm -f $(BUILD_BINS)
+	rm -rf xelab* xsim* webtalk* usage_statistics* *.wdb vivado_*
