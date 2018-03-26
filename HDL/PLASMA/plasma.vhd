@@ -886,7 +886,7 @@ begin  --architecture
 	--UART_PMOD MODIF HERE 
 	--
    uart_pmod_gen: if eUartPmod = '1' generate
-	   u3_uart_pmod: uart
+	   u3_uart_pmod: uart_pmod
       generic map (log_file => log_file)
       port map(
          clk          => clk,
