@@ -1,5 +1,6 @@
 #include "../../shared/plasmaSoPCDesign.h"
 #include "../../shared/plasma.h"
+#include <string.h>
 
 #define MemoryRead(A)     (*(volatile unsigned int*)(A))
 #define MemoryWrite(A,V) *(volatile unsigned int*)(A)=(V)
