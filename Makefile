@@ -230,7 +230,7 @@ PROJECT_HDL = $(SEVEN_SEGMENTS_HDL)
 else ifeq ($(CONFIG_PROJECT),i2c)
 PROJECT = $(I2C)
 PROJECT_HDL = $(I2C_HDL)
-else ifeq (&(CONFIG_PROJECT), gps)
+else ifeq ($(CONFIG_PROJECT), gps)
 PROJECT = $(GPS)
 PROJECT_HDL = $(GPS_HDL)
 endif
