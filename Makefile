@@ -246,10 +246,7 @@ endif
 
 ifeq ($(CONFIG_UART_PMOD),yes)          #UART_PMOD MODIF HERE
 PLASMA_SOC_GENERICS += eUartPmod=1'b1
-ifeq ($(CONFIG_UART),yes)       
-else
-PLASMA_SOC_FILES += uart.vhd            #Should not add uart.vhd twice.
-endif
+PLASMA_SOC_FILES += uart_pmod.vhd
 else
 PLASMA_SOC_GENERICS += eUartPmod=1'b0
 endif
