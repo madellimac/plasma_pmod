@@ -269,11 +269,11 @@ set_property IOSTANDARD LVCMOS33 [get_ports {OLED_PMOD_EN}]
 #set_property PACKAGE_PIN K2 [get_ports {JC[0]}]
 #set_property IOSTANDARD LVCMOS33 [get_ports {JC[0]}]
 ##Bank = 35, Pin name = IO_L6P_T0_35,						Sch name = JC2
-set_property PACKAGE_PIN E7 [get_ports {i_uart_pmod}]
-set_property IOSTANDARD LVCMOS33 [get_ports {i_uart_pmod}]
-##Bank = 35, Pin name = IO_L22P_T3_35,						Sch name = JC3
-set_property PACKAGE_PIN J3 [get_ports {o_uart_pmod}]
+set_property PACKAGE_PIN E7 [get_ports {o_uart_pmod}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_uart_pmod}]
+##Bank = 35, Pin name = IO_L22P_T3_35,						Sch name = JC3
+set_property PACKAGE_PIN J3 [get_ports {i_uart_pmod}]
+set_property IOSTANDARD LVCMOS33 [get_ports {i_uart_pmod}]
 ##Bank = 35, Pin name = IO_L21P_T3_DQS_35,					Sch name = JC4
 #set_property PACKAGE_PIN J4 [get_ports {JC[3]}]
 #set_property IOSTANDARD LVCMOS33 [get_ports {JC[3]}]
