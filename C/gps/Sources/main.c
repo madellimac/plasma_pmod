@@ -19,10 +19,21 @@ int puts_pmod(const char *string)
 	while(*string)
 	{
 		if(*string == '\n')
-			putchar('\r');
-		putchar(*string++);
+			putchar_pmod('\r');
+		putchar_pmod(*string++);
 	}
 	return 0;
+}
+
+int kbhit_pmod(void)
+{
+	return MemoryRead(UART_PMOD_STATUS) & UART_PMOD_WRITE_AVAILABLE;
+}
+
+int getch_pmod(void)
+{
+	while(!kbhit_pmod()) ;
+	return MemoryRead(UART_PMOD_READ);
 }
 
 
@@ -37,7 +48,8 @@ int main(int argc, char ** argv)
 	puts("Welcome to Gps project\n");
 	puts_pmod("Coucou\n");
 	while(1){
-		if((MemoryRead(UART_PMOD_STATUS) & UART_PMOD_READ_AVAILABLE) == 1){
+		putchar_pmod(getch_pmod());
+		/*if((MemoryRead(UART_PMOD_STATUS) & UART_PMOD_READ_AVAILABLE) == 1){
 			puts("A char is available on PMOD UART\n");
 			i = 0;
 			//j = 0;
@@ -63,6 +75,6 @@ int main(int argc, char ** argv)
 			//if(strcmp(message_id, "GPGGA") == 0){
 
 			//}
-		}
+		}*/
 	}
 }
