@@ -25,7 +25,7 @@ int main(int argc, char ** argv)
 					c = MemoryRead(UART_PMOD_READ);
 					puts("Char received : ");
 					char debug[] =  "Char received : \n";
-					debug[16] = c;
+					debug[15] = c;
 					puts(debug);
 					message[i] = c;
 					i++;
