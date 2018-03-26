@@ -23,7 +23,6 @@ int main(int argc, char ** argv)
 			while(c != '\n' && i < 128){
 				if((MemoryRead(UART_PMOD_STATUS) & UART_PMOD_READ_AVAILABLE) == 1){
 					c = MemoryRead(UART_PMOD_READ);
-					puts("Char received : ");
 					char debug[] =  "Char received : \n";
 					debug[15] = c;
 					puts(debug);
