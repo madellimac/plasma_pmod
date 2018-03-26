@@ -77,6 +77,15 @@ BUILD_DIRS += $(OBJ)/projet_e2
 BUILD_BINS += $(BIN)/projet_e2.bin
 PROJECTS += $(PROJET_E2)
 
+GPS = $(BIN)/gps.bin
+GPS_HDL = $(BIN)/gps.txt
+GPS_FILES = main.c
+GPS_SOURCES = $(addprefix $(C)/gps/Sources/,$(GPS_FILES))
+GPS_OBJECTS = $(addprefix $(OBJ)/gps/,$(GPS_FILES:.c=.o))
+BUILD_DIRS += $(OBJ)/gps
+BUILD_BINS += $(BIN)/gps.bin
+PROJECTS += $(GPS)
+
 MANDELBROT = $(BIN)/mandelbrot.bin
 MANDELBROT_HDL = $(BIN)/mandelbrot.txt
 MANDELBROT_FILES = main.c
@@ -221,6 +230,9 @@ PROJECT_HDL = $(SEVEN_SEGMENTS_HDL)
 else ifeq ($(CONFIG_PROJECT),i2c)
 PROJECT = $(I2C)
 PROJECT_HDL = $(I2C_HDL)
+else ifeq (&(CONFIG_PROJECT), gps)
+PROJECT = $(GPS)
+PROJECT_HDL = $(GPS_HDL)
 endif
 
 PLASMA_SOC_GENERICS =
@@ -339,7 +351,7 @@ $(HELLO_HDL): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(HELLO_OBJECTS) $(CONVERT
 	cp $(OBJ)/hello/hello_hdl.txt $@
 
 .PHONY: hello
-hello: $(PROJET_E2) $(PROJET_E2_HDL)
+hello: $(HELLO) $(HELLO_HDL)
 
 $(PROJET_E2_OBJECTS): $(OBJ)/projet_e2/%.o: $(C)/projet_e2/Sources/%.c | $(BUILD_DIRS)
 	$(CC_MIPS) $(CFLAGS_MIPS) -o $@ $<
@@ -468,6 +480,23 @@ $(I2C_HDL): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(I2C_OBJECTS) $(CONVERT_BIN
 
 .PHONY: i2c
 i2c: $(I2C) $(I2C_HDL)
+
+$(GPS_OBJECTS): $(OBJ)/gps/%.o: $(C)/gps/Sources/%.c | $(BUILD_DIRS)
+	$(CC_MIPS) $(CFLAGS_MIPS) -o $@ $<
+
+$(GPS): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(GPS_OBJECTS) $(CONVERT_BIN) | $(BUILD_DIRS)
+	$(LD_MIPS) -Ttext $(ENTRY_LOAD) -eentry -Map $(OBJ)/gps/gps.map -s -N -o $(OBJ)/gps/gps.axf $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(GPS_OBJECTS)
+	$(CONVERT_BIN) $(OBJ)/gps/gps.axf $(OBJ)/gps/gps.bin $(OBJ)/gps/gps.txt
+	cp $(OBJ)/gps/gps.bin $@
+
+$(GPS_HDL): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(GPS_OBJECTS) $(CONVERT_BIN) | $(BUILD_DIRS)
+	$(LD_MIPS) -Ttext $(ENTRY_HDL) -eentry -Map $(OBJ)/gps/gps.map -s -N -o $(OBJ)/gps/gps_hdl.axf $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(GPS_OBJECTS)
+	$(CONVERT_BIN) $(OBJ)/gps/gps_hdl.axf $(OBJ)/gps/gps_hdl.bin $(OBJ)/gps/gps_hdl.txt
+	cp $(OBJ)/gps/gps_hdl.txt $@
+
+.PHONY: gps
+gps: $(GPS) $(GPS_HDL)
+
 
 .PHONY: project
 project: $(PROJECT) $(PROJECT_HDL)
