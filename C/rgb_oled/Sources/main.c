@@ -6,23 +6,41 @@
 #define MemoryWrite(A,V) *(volatile unsigned int*)(A)=(V)
 
 //Function used to color a pixel at a given position (row, col)
+void clearScreen()
+{
+    for(int i = 0; i < 64; i++)
+        for(int j = 0; j < 96; j++)
+            printPixel(i,j,0x0000);
+}
+
 void printPixel(char row, char col, int color)
 {
 	int buff = 0x00000000;
 
-	buff = color;
-	buff = (buff << 8) | row;
-	buff = (buff << 8) | col;
+	buff = col;
+	buff = (buff << 6) | row;
+	buff = (buff << 2);
+    int addr = OLED_BITMAP_BASE + buff;
+    MemoryWrite(addr, color);
+}
 
-	MemoryWrite(OLED_BITMAP_RW, buff);
+int readPixel(char row, char col)
+{
+    int buff = 0x00000000;
+    buff = col;
+    buff = (buff << 6) | row;
+    int addr = OLED_BITMAP_BASE + buff;
+    return (MemoryRead(addr));
 }
 
 void rgb_oled_bitmap(void)
 {
 	MemoryWrite(OLED_MUX, OLED_MUX_BITMAP);
 	MemoryWrite(OLED_BITMAP_RST, 1); // Reset the oled_rgb PMOD
+    clearScreen();
 
 	// 'O'
+
 	printPixel(25, 32, 0xF800);
 	printPixel(25, 33, 0xF800);
 	printPixel(25, 34, 0xF800);
@@ -69,7 +87,7 @@ void rgb_oled_bitmap(void)
 	
 	
 	// '!'
-	printPixel(25, 53, 0x001F);	
+	printPixel(25, 53, 0x001F);
 	printPixel(26, 53, 0x001F);
 	printPixel(27, 53, 0x001F);
 	printPixel(28, 53, 0x001F);
@@ -147,8 +165,8 @@ void rgb_oled_terminal(void)
 
 int main(int argc, char ** argv)
 {
-	rgb_oled_charmap();
-//	rgb_oled_bitmap();
+//	rgb_oled_charmap();
+	rgb_oled_bitmap();
 //	rgb_oled_terminal();
 
 	while(1) ;

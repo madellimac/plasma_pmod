@@ -53,6 +53,8 @@
 #define OLED_MUX_NIBBLE   0x04
 #define OLED_MUX_SIGPLOT  0x05
 
+#define OLED_BITMAP_BASE  0x50000000
+
 /*********** GPIO out bits ***************/
 #define ETHERNET_MDIO     0x00200000
 #define ETHERNET_MDIO_WE  0x00400000

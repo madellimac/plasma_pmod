@@ -560,7 +560,8 @@ begin  --architecture
    oledterminal_valid <= '1' when (cpu_address = x"400004AC") AND (cpu_pause = '0') AND (write_enable = '1') else '0';
 
    oledbitmap_reset <= '1' when (cpu_address = x"400004B0") AND (cpu_pause = '0') else '0';
-   oledbitmap_valid <= '1' when (cpu_address = x"400004B8") AND (cpu_pause = '0') AND (write_enable = '1') else '0';
+   --oledbitmap_valid <= '1' when (cpu_address = x"400004B8") AND (cpu_pause = '0') AND (write_enable = '1') else '0';
+   oledbitmap_valid <= '1' when (cpu_address < x"50006000") AND (cpu_address > x"50000000") AND (cpu_pause = '0') AND (write_enable = '1') else '0';
 
    olednibblemap_reset <= '1' when (cpu_address = x"400004B4") AND (cpu_pause = '0') else '0';
    olednibblemap_valid <= '1' when (cpu_address = x"400004BC") AND (cpu_pause = '0') AND (write_enable = '1') else '0';
@@ -1247,9 +1248,9 @@ begin  --architecture
 	       	reset        => oledbitmap_reset,
 
 	       	pix_write    => oledbitmap_valid,
-	    	pix_col      => cpu_data_w(6 downto 0),
-	      	pix_row      => cpu_data_w(13 downto 8),
-	     	pix_data_in  => cpu_data_w(((BPP-1)+16) downto 16),
+	    	pix_col      => cpu_address(14 downto 8),
+	      	pix_row      => cpu_address(7 downto 2),
+	     	pix_data_in  => cpu_data_w(BPP-1 downto 0),
 	    	pix_data_out => oledbitmap_output(BPP-1 downto 0),
 
 	      	PMOD_CS      => oledbitmap_pinout(0),
