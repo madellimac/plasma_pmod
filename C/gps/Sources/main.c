@@ -6,6 +6,26 @@
 #define MemoryRead(A)     (*(volatile unsigned int*)(A))
 #define MemoryWrite(A,V) *(volatile unsigned int*)(A)=(V)
 
+int putchar_pmod(int value)
+{
+	while((MemoryRead(UART_PMOD_STATUS) & UART_PMOD_WRITE_AVAILABLE) == 0)
+		;
+	MemoryWrite(UART_PMOD_WRITE, value);
+	return 0;
+}
+
+int puts_pmod(const char *string)
+{
+	while(*string)
+	{
+		if(*string == '\n')
+			putchar('\r');
+		putchar(*string++);
+	}
+	return 0;
+}
+
+
 int main(int argc, char ** argv)
 {
 	char message[128];
@@ -15,6 +35,7 @@ int main(int argc, char ** argv)
 	int i = 0;
 	int j = 0;
 	puts("Welcome to Gps project\n");
+	puts_pmod("Coucou\n");
 	while(1){
 		if((MemoryRead(UART_PMOD_STATUS) & UART_PMOD_READ_AVAILABLE) == 1){
 			puts("A char is available on PMOD UART\n");
