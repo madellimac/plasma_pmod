@@ -498,6 +498,20 @@ architecture logic of plasma is
           PMOD_VCCEN   : out STD_LOGIC;
           PMOD_EN      : out STD_LOGIC);
 	end component;
+	
+	component uart_pmod is
+	   generic(log_file : string := "UNUSED");
+	   port(clk          : in  std_logic;
+			reset        : in  std_logic;
+			enable_read  : in  std_logic;
+			enable_write : in  std_logic;
+			data_in      : in  std_logic_vector(7 downto 0);
+			data_out     : out std_logic_vector(7 downto 0);
+			uart_read    : in  std_logic;
+			uart_write   : out std_logic;
+			busy_write   : out std_logic;
+			data_avail   : out std_logic);
+	end component; --entity uart_pmod
 
 begin  --architecture
 
