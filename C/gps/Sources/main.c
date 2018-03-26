@@ -17,19 +17,20 @@ int main(int argc, char ** argv)
 	puts("Welcome to Gps project\n");
 	while(1){
 		if((MemoryRead(UART_PMOD_STATUS) & UART_PMOD_READ_AVAILABLE) == 1){
-			puts("1st CHAR RECEIVED\n");
+			puts("A char is available on PMOD UART\n");
 			i = 0;
-			j = 0;
-			c = MemoryRead(UART_PMOD_READ);
-			while(c != '\n'){
-
-				message[i] = c;
-				c = MemoryRead(UART_PMOD_READ);
-				i++;
+			//j = 0;
+			while(c != '\n' && i < 128){
+				if((MemoryRead(UART_PMOD_STATUS) & UART_PMOD_READ_AVAILABLE) == 1){
+					c = MemoryRead(UART_PMOD_READ);
+					puts("Char received : ");
+					putc(c);
+					putc("\n");
+					message[i] = c;
+					i++;
+				}
 			}
-			message[i] = '\n';
-			message[i+1] = 0;
-			puts(message);
+			//puts(message);
 			// while(message[j] != '$')
 			// 	j++;
 			// j++;
