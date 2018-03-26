@@ -14,7 +14,7 @@ int main(int argc, char ** argv)
 	int j = 0;
 	puts("Welcome to Gps project\n");
 	while(1){
-		if(IRQ_UART_READ_AVAILABLE){
+		if(UART_PMOD_STATUS){
 			i = 0;
 			j = 0;
 			while((c = MemoryRead(0x40000500)) != '\n'){
