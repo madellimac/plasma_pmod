@@ -6,7 +6,13 @@
 #define MemoryRead(A)     (*(volatile unsigned int*)(A))
 #define MemoryWrite(A,V) *(volatile unsigned int*)(A)=(V)
 
-
+int putchar_2(int value)
+{
+   while((MemoryRead(IRQ_STATUS) & IRQ_UART_WRITE_AVAILABLE) == 0)
+      ;
+   MemoryWrite(UART_WRITE, value);
+   return 0;
+}
 
 int putchar_pmod(int value)
 {
@@ -29,7 +35,7 @@ int puts_pmod(const char *string)
 
 int kbhit_pmod(void)
 {
-	return MemoryRead(UART_PMOD_STATUS) & UART_PMOD_WRITE_AVAILABLE;
+	return MemoryRead(UART_PMOD_STATUS) & UART_PMOD_READ_AVAILABLE;
 }
 
 int getch_pmod(void)
@@ -50,7 +56,13 @@ int main(int argc, char ** argv)
 	puts("Welcome to Gps project\n");
 	puts_pmod("Coucou\n");
 	while(1){
-		putchar(getch_pmod());
+		c = getch_pmod();
+		if(c != 0){
+			puts("Char received : ");
+			putchar_2(getch_pmod());
+			puts("\n");
+		}
+
 		/*if((MemoryRead(UART_PMOD_STATUS) & UART_PMOD_READ_AVAILABLE) == 1){
 			puts("A char is available on PMOD UART\n");
 			i = 0;
