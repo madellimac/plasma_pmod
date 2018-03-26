@@ -9,7 +9,6 @@
 int main(int argc, char ** argv)
 {
 	char message[128];
-	char debug[32];
 	char time[10];
 	char c;
 	char message_id[5];
@@ -25,7 +24,8 @@ int main(int argc, char ** argv)
 				if((MemoryRead(UART_PMOD_STATUS) & UART_PMOD_READ_AVAILABLE) == 1){
 					c = MemoryRead(UART_PMOD_READ);
 					puts("Char received : ");
-					sprintf(debug, "Char received : %c\n", c);
+					char debug[] =  "Char received : \n";
+					debug[16] = c;
 					puts(debug);
 					message[i] = c;
 					i++;
