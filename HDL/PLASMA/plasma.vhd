@@ -211,7 +211,7 @@ architecture logic of plasma is
    signal ctrl_7seg_valid   : std_logic;
    signal ctrl_7seg_reset   : std_logic;
 
-  signal oled_pinout        : std_logic_vector(6 downto 0);
+   signal oled_pinout        : std_logic_vector(6 downto 0);
 
    signal ctrl_SL_reset     : std_logic;
    signal ctrl_SL_valid	    : std_logic;
@@ -605,7 +605,7 @@ begin  --architecture
    oledsigplot_reset <= '1' when (cpu_address = x"400004D0") AND (cpu_pause = '0') else '0';
    oledsigplot_valid <= '1' when (cpu_address = x"400004D8") AND (cpu_pause = '0') AND (write_enable = '1') else '0';
    
-   enable_uart_pmod             <= '1' when enable_misc = '1' and (cpu_address = x"40000500") else '0'; 
+   enable_uart_pmod             <= '1' when (cpu_address = x"40000500") else '0'; 
    enable_uart_pmod_read        <= enable_uart_pmod and not write_enable;	--UART_PMOD MODIF HERE (signal link)
    enable_uart_pmod_write       <= enable_uart_pmod and write_enable;
    
