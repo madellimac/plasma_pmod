@@ -324,6 +324,7 @@ architecture logic of plasma is
    signal cache_hit         : std_logic;
 
    signal uart_pmod_status  : std_logic_vector(1 downto 0);
+   signal uart_pmod_mask	: std_logic_vector(1 downto 0);
 	
 	COMPONENT memory_64k
     Port ( clk       : in   STD_LOGIC;
@@ -776,8 +777,9 @@ begin  --architecture
 			when x"400004AC" => cpu_data_r <= oledterminal_output;
 			when x"400004B8" => cpu_data_r <= oledbitmap_output;
 			when x"400004D8" => cpu_data_r <= oledsigplot_output;
-                        when x"40000500" => cpu_data_r <= ZERO(31 downto 8) & data_read_uart_pmod; --UART_PMOD MODIF HERE
-                        when x"40000504" => cpu_data_r <= ZERO(31 downto 2) & uart_pmod_status;
+		    when x"40000500" => cpu_data_r <= ZERO(31 downto 8) & data_read_uart_pmod; --UART_PMOD MODIF HERE
+		    when x"40000510" => cpu_data_r <= ZERO(31 downto 2) & uart_pmod_mask;
+			when x"40000520" => cpu_data_r <= ZERO(31 downto 2) & uart_pmod_status;
                                       
 			when others => cpu_data_r <= x"FFFFFFFF";
 		end case;
@@ -802,6 +804,8 @@ begin  --architecture
                elsif cpu_address(6 downto 4) = "100" then
                   gpio0_reg <= gpio0_reg and not cpu_data_w;
                end if;
+            elsif write_enable = '1' and cpu_address = x"4000510" then
+			   uart_pmod_mask <= cpu_data_w(1 downto 0);
             end if;
          end if;
          counter_reg <= bv_inc(counter_reg);
