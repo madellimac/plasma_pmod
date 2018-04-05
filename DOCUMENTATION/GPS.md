@@ -74,7 +74,17 @@ The UART Pmod Controller has been addressed to `0x40000500`.
 
 ## Issues
 
+The gps controller strongly relies on the additional UART. If the UART pmod controller doesn't work, the communication with the gps pmod is impossible.
 
+* The main issues are :
+
+    *  The difficulties to understand of uart communication with the plasma. (Interrupts, baud rates, DMA...)
+
+    * The impossibility of using functions from standard library like *malloc*, *free* and so on.
+
+    * The difficulties to monitor signals and registers values.
+
+    * Possible interferences on the main uart and from the main uart.
 
 ----------
 
