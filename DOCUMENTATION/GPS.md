@@ -29,7 +29,8 @@ To use it you just have to include gps.h in your code.
 
 ## Controller addressing
 
-The UART Pmod Controller has been addressed to `0x40000050`
+The UART Pmod Controller has been addressed to `0x40000500`.
+
 
 
 ----------
