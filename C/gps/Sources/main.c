@@ -3,53 +3,21 @@
 #include "../../shared/plasmaMyPrint.h"
 #include <stdio.h>
 
+#include "uart_pmod.h"
+#include "gps.h"
+
 #define MemoryRead(A)     (*(volatile unsigned int*)(A))
 #define MemoryWrite(A,V) *(volatile unsigned int*)(A)=(V)
 
-int putchar_2(int value)
-{
-   while((MemoryRead(IRQ_STATUS) & IRQ_UART_WRITE_AVAILABLE) == 0)
-      ;
-   MemoryWrite(UART_WRITE, value);
-   return 0;
-}
-
-int putchar_pmod(int value)
-{
-	while((MemoryRead(UART_PMOD_STATUS) & UART_PMOD_WRITE_AVAILABLE) == 0)
-		;
-	MemoryWrite(UART_PMOD_WRITE, value);
-	return 0;
-}
-
-int puts_pmod(const char *string)
-{
-	while(*string)
-	{
-		if(*string == '\n')
-			putchar_pmod('\r');
-		putchar_pmod(*string++);
-	}
-	return 0;
-}
-
-int kbhit_pmod(void)
-{
-	return MemoryRead(UART_PMOD_STATUS) & UART_PMOD_READ_AVAILABLE;
-}
-
-int getch_pmod(void)
-{
-	while(!kbhit_pmod()) ;
-	return MemoryRead(UART_PMOD_READ);
-}
-
-
 int main(int argc, char ** argv)
 {
+    MemoryWrite(CTRL_SL_RST, 1);
 
   while (1) {
-    putchar_2(getch_pmod());
+      //putchar(getch_pmod());
+
+      value =  MemoryRead(UART_PMOD_STATUS); // MSByte drives the 2 RBG Led (6 bit), LSByte drives the led
+      MemoryWrite(CTRL_SL_RW, value); // drive the LEDs with value
   }
 
 

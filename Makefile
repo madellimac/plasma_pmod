@@ -79,7 +79,7 @@ PROJECTS += $(PROJET_E2)
 
 GPS = $(BIN)/gps.bin
 GPS_HDL = $(BIN)/gps.txt
-GPS_FILES = main.c
+GPS_FILES = main.c + gps.c + uart_pmod.c
 GPS_SOURCES = $(addprefix $(C)/gps/Sources/,$(GPS_FILES))
 GPS_OBJECTS = $(addprefix $(OBJ)/gps/,$(GPS_FILES:.c=.o))
 BUILD_DIRS += $(OBJ)/gps
