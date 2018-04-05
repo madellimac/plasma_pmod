@@ -325,6 +325,7 @@ architecture logic of plasma is
 
    signal uart_pmod_status  : std_logic_vector(1 downto 0);
    signal uart_pmod_mask	: std_logic_vector(1 downto 0);
+   signal uart_pmod_flag	: std_logic;
 	
 	COMPONENT memory_64k
     Port ( clk       : in   STD_LOGIC;
@@ -546,6 +547,7 @@ begin  --architecture
    irq          <= '1' when (irq_status and irq_mask_reg) /= ZERO(7 downto 0) else '0';
 
    uart_pmod_status <= not uart_pmod_write_busy & uart_pmod_data_avail; --UART_PMOD MODIF HERE 
+   uart_pmod_flag   <= '1' when (uart_pmod_status and uart_pmod_mask) /= ZERO(7 downto 0) else '0';
    
    gpio0_out(31 downto 29) <= gpio0_reg(31 downto 29);
    gpio0_out(23 downto 0)  <= gpio0_reg(23 downto 0);

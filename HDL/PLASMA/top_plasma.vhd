@@ -19,7 +19,7 @@ use unisim.VComponents.all;
 entity top_plasma is
    generic(ethernet    : std_logic  := '0';
            eUart       : std_logic  := '1';          
-           eUartPmod   : std_logic 	:= '0'; --UART_PMOD MODIF HERE          
+           eUartPmod   : std_logic 	:= '1'; --UART_PMOD MODIF HERE          
            eButtons    : std_logic  := '1';
            eRGBOLED    : std_logic  := '1';
            eSwitchLED  : std_logic  := '1';
@@ -27,6 +27,8 @@ entity top_plasma is
            eI2C        : std_logic  := '1';
            use_cache   : std_logic  := '0');
     port(
+    GND : out std_logic; -- Debug purpose ONLY.
+    --VCC : out std_logic; -- Debug purpose ONLY.
 	clk100: in std_logic;
 	--rst: in std_logic;
 	--led: out std_logic_vector(7 downto 0);
@@ -93,10 +95,9 @@ architecture rtl of top_plasma is
    signal an_tmp           : std_logic_vector(7 downto 0);
 
 begin
-
+	
+   GND <= '0';
    rst <= not btnCpuReset;
-
-
 
 --	DCM clock generation for internal bus, ethernet
 --clock_gen : clk_wiz_0 -- vivado
