@@ -2,7 +2,7 @@
 
 ## Introduction
 
-New features as been added to the plasma softcore processor. The GPS Pmod module is based on an UART communication so to use it, it is necessarry to implement a new UART HDL module, this has been done based on the original UART controller with some modifications to allow it to run on 9600 Bauds. It is cabled on pmod pins in the top plasma HDL.
+New features as been added to the plasma softcore processor. The GPS Pmod module is based on an UART communication so to use it, it is necessarry to implement a new UART HDL module, this has been done based on the original UART controller with some modifications to allow it to run on 9600 Bauds. It is cabled on pmod pins in the top plasma HDL. It is link to the pmod junction JC of the board (under the mic).
 
 ## Using the GPS Pmod Controller
 
@@ -101,6 +101,10 @@ The gps controller strongly relies on the additional UART. If the UART pmod cont
     * The difficulties to monitor signals and registers values.
 
     * Possible interferences on the main UART and from the main UART.
+
+***Addendum***
+
+We are hardly trying to make it working. If the additional uart controller work, it could be duplicated and optionnaly added on the other pmod junctions. It also could be used for many other projects.
 
 ----------
 
