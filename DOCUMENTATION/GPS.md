@@ -73,12 +73,18 @@ This structure contains most of paramaters which can be read on a Gps GPGGA line
 The UART Pmod Controller has been addressed to `0x40000500`.
 
 UART_PMOD_WRITE :  `0x40000500`
+
 UART_PMOD_READ  :  `0x40000500`
+
 UART_PMOD_MASK  :	`0x40000510`
+
 UART_PMOD_STATUS : `0x40000520`
 
+
 UART_PMOD_READ_AVAILABLE : `0x01`
+
 UART_PMOD_WRITE_AVAILABLE : `0x02`
+
 
 UART Status contains data concerning availabily of read or write action. To check if it is available use the last two masks to get the concerned bit.
 
