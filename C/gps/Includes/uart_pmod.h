@@ -5,6 +5,12 @@
 #ifndef C_UART_PMOD_H
 #define C_UART_PMOD_H
 
+#include "../../shared/plasmaSoPCDesign.h"
+#include "../../shared/plasma.h"
+#include "../../shared/plasmaMyPrint.h"
+
+#include <stdlib.h>
+
 int puts_pmod(const char *string);
 int kbhit_pmod(void);
 int getch_pmod(void);
