@@ -2,9 +2,9 @@
 
 CC ?= gcc
 C++ ?= g++
-CC_MIPS ?= mips-elf-gcc
-AS_MIPS ?= mips-elf-as
-LD_MIPS ?= mips-elf-ld
+CC_MIPS ?=mips-elf-gcc
+AS_MIPS ?=mips-elf-as
+LD_MIPS ?=mips-elf-ld
 
 # Compiler
 
