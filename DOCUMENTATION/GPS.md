@@ -80,11 +80,11 @@ The gps controller strongly relies on the additional UART. If the UART pmod cont
 
     *  The difficulties to understand of uart communication with the plasma. (Interrupts, baud rates, DMA...)
 
-    * The impossibility of using functions from standard library like *malloc*, *free* and so on.
+    * The impossibility of using functions from standard library like `malloc`, `free` and so on.
 
     * The difficulties to monitor signals and registers values.
 
-    * Possible interferences on the main uart and from the main uart.
+    * Possible interferences on the main UART and from the main UART.
 
 ----------
 
