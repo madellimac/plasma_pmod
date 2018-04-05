@@ -27,7 +27,7 @@ entity top_plasma is
            eI2C        : std_logic  := '1';
            use_cache   : std_logic  := '0');
     port(
-    GND : out std_logic; -- Debug purpose ONLY.
+    --GND : out std_logic; -- Debug purpose ONLY.
     --VCC : out std_logic; -- Debug purpose ONLY.
 	clk100: in std_logic;
 	--rst: in std_logic;
@@ -95,8 +95,8 @@ architecture rtl of top_plasma is
    signal an_tmp           : std_logic_vector(7 downto 0);
 
 begin
-	
-   GND <= '0';
+   --VCC <= '1';
+   --GND <= '0';
    rst <= not btnCpuReset;
 
 --	DCM clock generation for internal bus, ethernet

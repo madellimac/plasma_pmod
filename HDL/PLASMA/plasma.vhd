@@ -708,7 +708,7 @@ begin  --architecture
       fifo_1_empty, fifo_2_empty, fifo_1_full, fifo_2_full,
       fifo_1_valid, fifo_2_valid, fifo_1_compteur, fifo_2_compteur, fifo_1_out_data,
       oledsigplot_output, oledterminal_output, oledcharmap_output, olednibblemap_output,
-      oledbitmap_output, ctrl_SL_output, data_read_uart_pmod) --UART_PMOD MODIF HERE
+      oledbitmap_output, ctrl_SL_output, data_read_uart_pmod, uart_pmod_status, uart_pmod_mask) --UART_PMOD MODIF HERE
    begin
       case cpu_address(30 downto 28) is
 
@@ -806,7 +806,7 @@ begin  --architecture
                elsif cpu_address(6 downto 4) = "100" then
                   gpio0_reg <= gpio0_reg and not cpu_data_w;
                end if;
-            elsif write_enable = '1' and cpu_address = x"4000510" then
+            elsif write_enable = '1' and cpu_address = x"40000510" then
 			   uart_pmod_mask <= cpu_data_w(1 downto 0);
             end if;
          end if;

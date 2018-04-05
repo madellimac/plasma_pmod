@@ -61,14 +61,14 @@ uart_proc: process(clk, reset, enable_read, enable_write, data_in,
 	--      "0000001000010010";  -- 60MHz / 115200Hz
 	--      "0000000111101110";  -- 57MHz / 115200Hz
 	--      "0000000111011101";  -- 55MHz / 115200Hz
-	      "0000000110110010";  -- 50MHz / 115200Hz
+	--      "0000000110110010";  -- 50MHz / 115200Hz
 	--      "0000000100011110";  -- 33MHz / 2/57600Hz = 0x11e
 	--      "0000010101101101";  -- 80MHz / 57600Hz = 0x56D
 	--      "0000001101100100";  -- 50MHz / 57600Hz = 0x364
 	--      "0000000110110010";  -- 25MHz / 57600Hz = 0x1b2 -- Plasma IF uses div2
 	--      "0000000011011001";  -- 12.5MHz /57600Hz = 0xd9
 	--      "0000000000000100";  --for debug (shorten read_value_reg)
-	--		"0001010001011000";  -- 50Mhz / 9600Hz
+			"0001010001011000";  -- 50Mhz / 9600Hz
 begin
    uart_read2 <= read_value_reg(read_value_reg'length - 1);
 
