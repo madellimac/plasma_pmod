@@ -21,7 +21,7 @@ struct Gps_Data_GPGGA{
     int sats;
 };
 
-struct Gps_Data_GPGGA* Gps_init();
+void Gps_init();
 void Gps_close(struct Gps_Data_GPGGA* _to_delete);
 int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat);
 void Gps_Display_GPGGA(struct Gps_Data_GPGGA* _gpsdat);

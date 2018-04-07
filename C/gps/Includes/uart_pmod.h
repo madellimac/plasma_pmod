@@ -9,7 +9,8 @@
 #include "../../shared/plasma.h"
 #include "../../shared/plasmaMyPrint.h"
 
-#include <stdlib.h>
+#define MemoryRead(A)     (*(volatile unsigned int*)(A))
+#define MemoryWrite(A,V) *(volatile unsigned int*)(A)=(V)
 
 int puts_pmod(const char *string);
 int kbhit_pmod(void);
