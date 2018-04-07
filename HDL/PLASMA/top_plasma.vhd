@@ -18,7 +18,8 @@ use unisim.VComponents.all;
 
 entity top_plasma is
    generic(ethernet    : std_logic  := '0';
-           eUart       : std_logic  := '1';
+           eUart       : std_logic  := '1';          
+           eUartPmod   : std_logic 	:= '1'; --UART_PMOD MODIF HERE          
            eButtons    : std_logic  := '1';
            eRGBOLED    : std_logic  := '1';
            eSwitchLED  : std_logic  := '1';
@@ -26,12 +27,16 @@ entity top_plasma is
            eI2C        : std_logic  := '1';
            use_cache   : std_logic  := '0');
     port(
+    --GND : out std_logic; -- Debug purpose ONLY.
+    --VCC : out std_logic; -- Debug purpose ONLY.
 	clk100: in std_logic;
 	--rst: in std_logic;
 	--led: out std_logic_vector(7 downto 0);
    i_uart : in std_logic;
    o_uart : out std_logic;
-	VGA_hs       : out std_logic;   -- horisontal vga syncr.
+   i_uart_pmod : in std_logic;	   	--UART_PMOD MODIF HERE 
+   o_uart_pmod : out std_logic;
+   VGA_hs       : out std_logic;   -- horisontal vga syncr.
    VGA_vs       : out std_logic;   -- vertical vga syncr.
    VGA_red      : out std_logic_vector(3 downto 0);   -- red output
    VGA_green    : out std_logic_vector(3 downto 0);   -- green output
@@ -90,10 +95,9 @@ architecture rtl of top_plasma is
    signal an_tmp           : std_logic_vector(7 downto 0);
 
 begin
-
+   --VCC <= '1';
+   --GND <= '0';
    rst <= not btnCpuReset;
-
-
 
 --	DCM clock generation for internal bus, ethernet
 --clock_gen : clk_wiz_0 -- vivado
@@ -123,6 +127,7 @@ end process;
 		log_file    => "UNUSED",
 		ethernet    => ethernet,
 		eUart       => eUart,
+		eUartPmod	=> eUartPmod,
 		eButtons    => eButtons,
 		eRGBOLED    => eRGBOLED,
 		eSwitchLED  => eSwitchLED,
@@ -136,6 +141,8 @@ end process;
 		reset         => rst,
 		uart_write    => o_uart,
 		uart_read     => i_uart,
+		uart_pmod_write    => o_uart_pmod,
+		uart_pmod_read     => i_uart_pmod,
 		fifo_1_out_data  => x"00000000",
 		fifo_1_read_en   => open,
 		fifo_1_empty     => '1',
