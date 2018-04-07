@@ -11,8 +11,7 @@
 ##################################################################
    #Reserve 512 bytes for stack
    # BLG 4ko de STACK
-   #.comm InitStack, 128
-   .comm InitStack, 2048
+   .comm InitStack, 128
 
    .text
    .align 2
@@ -26,8 +25,7 @@ entry:
    la    $gp, _gp             #initialize global pointer
    la    $5, __bss_start      #$5 = .sbss_start
    la    $4, _end             #$2 = .bss_end
-   #la    $sp, InitStack+80   #initialize stack pointer
-   la    $sp, InitStack+(2048-24) #initialize stack pointer
+   la    $sp, InitStack+80   #initialize stack pointer
 
 $BSS_CLEAR:
    sw    $0, 0($5)

@@ -6,7 +6,7 @@
 
 int main(int argc, char ** argv)
 {
-	
+
 	puts("Hello world Projet E2 !\n");
 
 }

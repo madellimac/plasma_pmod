@@ -15,7 +15,8 @@
 /*********** Hardware addesses ***********/
 #define RAM_INTERNAL_BASE 0x00000000 //8KB
 #define RAM_EXTERNAL_BASE 0x10000000 //1MB
-#define RAM_EXTERNAL_SIZE 0x00010000
+// #define RAM_EXTERNAL_SIZE 0x00100000
+#define RAM_EXTERNAL_SIZE 0x00010000 // BLG INTERNAL RAM
 #define MISC_BASE         0x20000000
 #define UART_WRITE        0x20000000
 #define UART_READ         0x20000000
@@ -47,11 +48,6 @@
 #define OLED_SIGPLOT_RST  0x400004D0
 #define OLED_SIGPLOT_RW   0x400004D8
 
-#define UART_PMOD_WRITE   0x40000500
-#define UART_PMOD_READ    0x40000500
-#define UART_PMOD_MASK  	0x40000510
-#define UART_PMOD_STATUS  0x40000520
-
 #define OLED_MUX_CHARMAP  0x01
 #define OLED_MUX_BITMAP   0x02
 #define OLED_MUX_TERMINAL 0x03
@@ -74,8 +70,6 @@
 #define IRQ_GPIO31_NOT           0x40
 #define IRQ_GPIO31               0x80
 
-#define UART_PMOD_READ_AVAILABLE  0x01
-#define UART_PMOD_WRITE_AVAILABLE 0x02
 /*********** Ethernet buffers ************/
 #define ETHERNET_RECEIVE  0x13ff0000
 #define ETHERNET_TRANSMIT 0x13fe0000
