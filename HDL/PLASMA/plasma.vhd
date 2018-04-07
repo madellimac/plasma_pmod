@@ -326,6 +326,8 @@ architecture logic of plasma is
    signal uart_pmod_status  : std_logic_vector(1 downto 0);
    signal uart_pmod_mask	: std_logic_vector(1 downto 0);
    signal uart_pmod_flag	: std_logic;
+   
+   signal irq_sig			: std_logic;
 	
 	COMPONENT memory_64k
     Port ( clk       : in   STD_LOGIC;
@@ -502,7 +504,6 @@ architecture logic of plasma is
 	end component;
 	
 	component uart_pmod is
-	   generic(log_file : string := "UNUSED");
 	   port(clk          : in  std_logic;
 			reset        : in  std_logic;
 			enable_read  : in  std_logic;
@@ -548,6 +549,8 @@ begin  --architecture
 
    uart_pmod_status <= not uart_pmod_write_busy & uart_pmod_data_avail; --UART_PMOD MODIF HERE 
    uart_pmod_flag   <= '1' when (uart_pmod_status and uart_pmod_mask) /= ZERO(7 downto 0) else '0';
+   
+   irq_sig <= (irq or uart_pmod_flag);
    
    gpio0_out(31 downto 29) <= gpio0_reg(31 downto 29);
    gpio0_out(23 downto 0)  <= gpio0_reg(23 downto 0);
@@ -650,7 +653,7 @@ begin  --architecture
       PORT MAP (
          clk          => clk,
          reset_in     => reset,
-         intr_in      => irq,
+         intr_in      => irq_sig,
 
          address_next => address_next,             --before rising_edge(clk)
          byte_we_next => byte_we_next,
@@ -793,6 +796,7 @@ begin  --architecture
       end case;
 
       if reset = '1' then
+		 uart_pmod_mask <= ZER0(1 downto 0);
          irq_mask_reg <= ZERO(7 downto 0);
          gpio0_reg    <= ZERO;
          counter_reg  <= ZERO;
@@ -907,7 +911,6 @@ begin  --architecture
 	--
    uart_pmod_gen: if eUartPmod = '1' generate
 	   u3_uart_pmod: uart_pmod
-      generic map (log_file => log_file)
       port map(
          clk          => clk,
          reset        => reset,
