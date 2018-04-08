@@ -101,7 +101,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.numeric_std.all;
 
 entity my_fifo is
-   generic (FIFO_LENGTH : integer range 0 to 127 := 8
+   generic (FIFO_LENGTH : integer range 0 to 127 := 32
    );
    port(
         clk          : in  std_logic;
