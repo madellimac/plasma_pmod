@@ -2,12 +2,15 @@
 #include "../../shared/plasmaSoPCDesign.h"
 #include "../../shared/plasma.h"
 
-#define DEBUG 3
+#define DEBUG 0
 
 int main(int argc, char ** argv)
 {
     MemoryWrite(CTRL_SL_RST, 1);
-	unsigned int value =0;
+	unsigned int value = 0;
+	
+	struct Gps_Data_GPGGA gpsdat;
+	Gps_init(&gpsdat);
 
 	while (1) {
 		if(DEBUG == 1){
@@ -24,16 +27,15 @@ int main(int argc, char ** argv)
 			else
 				MemoryWrite(CTRL_SL_RW, 0x00000000);
 			puts(test);
-		}else if(DEBUG == 3){
-      char buff[128];
-      getline_pmod(buff, 128-1);
-      puts(buff);
-		}else{
-			struct Gps_Data_GPGGA gpsdat;
-			Gps_init(&gpsdat);
-			int ok = Gps_Get_GPGGA(&gpsdat);
-			if(ok == 1)
-				Gps_Display_GPGGA(&gpsdat);
+		}
+		else if(DEBUG == 3){
+			char buff[128];
+			getline_pmod(buff, 128-1);
+			puts(buff);
+		}
+		else{
+			while(Gps_Get_GPGGA(&gpsdat) == 0);
+			Gps_Display_GPGGA(&gpsdat);
 		}
 	}
 }

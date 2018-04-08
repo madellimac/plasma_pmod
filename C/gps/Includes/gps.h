@@ -116,12 +116,10 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 			_gpsdat->sats = my_atoi(sats);
 			v = i;
 			i++;
+			return 1;
 		}
-        return 1;
     }
-    else{
-        return 0;
-    }
+    return 0;
 }
 
 void Gps_Display_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
