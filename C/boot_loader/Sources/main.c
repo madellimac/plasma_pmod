@@ -19,6 +19,7 @@
 #include "../../shared/plasmaMisc.h"
 #include "../../shared/plasmaSoPCDesign.h"
 #include "../../shared/plasmaMyPrint.h"
+#include "../../shared/plasma.h"
 
 #define DDR_BASE 0x10000000
 
@@ -117,22 +118,22 @@ int ReceiveProgram()
         	return 0;
 	}
 	data = wait_data(); // read the 3th key, should be : 0x32
-	if( data != 0x32 ) 
+	if( data != 0x32 )
 	{
         	print_err( 4 );
         	return 0;
 	}
-    
+
 	data = wait_data(); // read the 4th key, should be : 0x33
-	if( data != 0x33 ) 
+	if( data != 0x33 )
 	{
         	print_err( 5 );
         	return 0;
 	}
-    
+
 	//
 	// RETRIEVE PROGRAM SIZE
-	// 
+	//
 
 	unsigned char data1 = wait_data(); // READ 4 BYTES THAT SHOULD REPRESENT THE PROGRAM SIZE
 	unsigned char data2 = wait_data();
@@ -161,14 +162,14 @@ int main()
 	puts("\n\n\n");
 	puts("uBoot-Loader (UART) ");
 	puts(__DATE__); puts(" "); puts(__TIME__); puts("\n");
-	
+
 	flush_input_data();
 	puts("(I) Waiting program from UART\n");
-	
+
    	for(;;)
    	{
         while( (kbhit() == 0) && (i_empty() == 1) ) ;
-        
+
  	ch = wait_data();
 	switch(ch)
 	{
