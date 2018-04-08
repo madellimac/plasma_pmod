@@ -52,7 +52,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 				_gpsdat->utc_time[i-v-1] = data[i];
 				i++;
 			}
-			_gpsdat->utc_time[i-v-1] = "\0";
+			_gpsdat->utc_time[i-v-1] = '\0';
 			v = i;
 			i++;
 			
@@ -60,7 +60,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 				_gpsdat->latitude[i-v-1] = data[i];
 				i++;
 			}
-			_gpsdat->latitude[i-v-1] = "\0";
+			_gpsdat->latitude[i-v-1] = '\0';
 			v = i;
 			i++;
 			
@@ -68,7 +68,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 				_gpsdat->vert[i-v-1] = data[i];
 				i++;
 			}
-			_gpsdat->vert[i-v-1] = "\0";
+			_gpsdat->vert[i-v-1] = '\0';
 			v = i;
 			i++;
 			
@@ -76,7 +76,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 				_gpsdat->longitude[i-v-1] = data[i];
 				i++;
 			}
-			_gpsdat->longitude[i-v-1] = "\0";
+			_gpsdat->longitude[i-v-1] = '\0';
 			v = i;
 			i++;
 			
@@ -84,7 +84,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 				_gpsdat->horz[i-v-1] = data[i];
 				i++;
 			}
-			_gpsdat->horz[i-v-1] = "\0";
+			_gpsdat->horz[i-v-1] = '\0';
 			v = i;
 			i++;
 			
@@ -92,8 +92,8 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 				fixed[i-v-1] = data[i];
 				i++;
 			}
-			fixed[i-v-1] = "\0";
-			_gpsdat->fix = atoi(fixed);
+			fixed[i-v-1] = '\0';
+			//_gpsdat->fix = atoi(fixed);
 			v = i;
 			i++;
 			
@@ -101,8 +101,8 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 				sats[i-v-1] = data[i];
 				i++;
 			}
-			sats[i-v-1] = "\0";
-			_gpsdat->sats = atoi(sats);
+			sats[i-v-1] = '\0';
+			//_gpsdat->sats = atoi(sats);
 			v = i;
 			i++;
 		}

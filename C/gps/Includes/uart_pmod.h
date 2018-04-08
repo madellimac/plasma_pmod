@@ -50,6 +50,7 @@ int getline_pmod(char *string, int n){
         string[i] = c;
         i++;
     }
+	return i;
 }
 
 #endif //C_UART_PMOD_H
