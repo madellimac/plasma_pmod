@@ -17,6 +17,17 @@ int my_strcmp (const char* s1, const char* s2)
     return (*((unsigned char *)--s1) < *((unsigned char *)--s2)) ? -1 : (*(unsigned char *)s1 != *(unsigned char *)s2);
 }
 
+int my_atoi(char *str)
+{
+    int res = 0;
+	int i = 0;
+    while(str[i] != '\0'){
+        res = res*10 + str[i] - '0';
+		i++;
+	}
+    return res;
+}
+
 struct Gps_Data_GPGGA{
     char utc_time[11];
     char latitude[10];
@@ -47,7 +58,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 	int v = 6;
     if(data[0] == '$'){
 		char inst[6] = {data[1], data[2], data[3], data[4], data[5], '\0'};
-		if(my_strcmp(inst, "GPGGA")){
+		if(my_strcmp(inst, "GPGGA") == 0){
 			while(data[i] != ','){
 				_gpsdat->utc_time[i-v-1] = data[i];
 				i++;
@@ -93,7 +104,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 				i++;
 			}
 			fixed[i-v-1] = '\0';
-			//_gpsdat->fix = atoi(fixed);
+			_gpsdat->fix = my_atoi(fixed);
 			v = i;
 			i++;
 			
@@ -102,7 +113,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 				i++;
 			}
 			sats[i-v-1] = '\0';
-			//_gpsdat->sats = atoi(sats);
+			_gpsdat->sats = my_atoi(sats);
 			v = i;
 			i++;
 		}
@@ -114,6 +125,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 }
 
 void Gps_Display_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
+	puts("\nGPGGA DATA : \n");
 	puts("UTC :");
 	puts(_gpsdat->utc_time);
 	puts("\n");
@@ -123,7 +135,7 @@ void Gps_Display_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 	puts("\n");
 	puts("Longitude :");
 	puts(_gpsdat->horz);	
-	puts(_gpsdat->utc_time);
+	puts(_gpsdat->longitude);
 	puts("\n");
 	my_printf("Fix : ", _gpsdat->fix);
 	my_printf("Satellites : ", _gpsdat->sats);

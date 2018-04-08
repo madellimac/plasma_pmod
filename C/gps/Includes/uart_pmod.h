@@ -50,6 +50,12 @@ int getline_pmod(char *string, int n){
         string[i] = c;
         i++;
     }
+	if( i == n){
+        string[i-1] = 0;
+    }
+    else{
+        string[i] = 0;
+    }
 	return i;
 }
 
