@@ -6,11 +6,11 @@
 
 void Gps_init( struct Gps_Data_GPGGA* newData ){
 
-    strcpy(newData->utc_time, "");
-    strcpy(newData->latitude, "");
-    strcpy(newData->longitude, "");
-    strcpy(newData->vert, "");
-    strcpy(newData->horz, "");
+    newData->utc_time[0] = 0;
+    newData->latitude[0] = 0;
+    newData->longitude[0] = 0;
+    newData->vert[0] = 0;
+    newData->horz[0] = 0;
     newData->fix = 0;
     newData->sats = 0;
 }

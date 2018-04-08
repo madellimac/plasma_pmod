@@ -53,7 +53,7 @@ type t_fsm is (idle, zero_as_input, wait_next_bit, bit_sample, bit_received, wai
 signal state : t_fsm := idle;
 signal nbbits: integer range 0 to 8:=0;
 --signal cnt   : integer range 0 to 1023;  --for 100MHz to 115200bps
-signal cnt	 : integer range 0 to 8192;  --for 50MHz to 9600bps
+signal cnt	 : integer range 0 to 8191;  --for 50MHz to 9600bps
 signal rxi   : std_logic:='1';
 signal ref_bit          : std_logic;
 signal shift : STD_LOGIC_VECTOR (7 downto 0);
@@ -64,9 +64,9 @@ signal shift : STD_LOGIC_VECTOR (7 downto 0);
 --constant half             : integer range 0 to 511 := 433;
 --constant three_quarters   : integer range 0 to 1023:= 643;
 --constant full             : integer range 0 to 1023:= 867;  -- (100MHz /  115200bps) - 1
-constant quarter          : integer range 0 to 2048:= 1301;
-constant half             : integer range 0 to 4096:= 2603;
-constant three_quarters   : integer range 0 to 4096:= 3905;
+constant quarter          : integer range 0 to 2047:= 1301;
+constant half             : integer range 0 to 4095:= 2603;
+constant three_quarters   : integer range 0 to 4095:= 3905;
 constant full             : integer range 0 to 8191:= 5207;  -- (50Mhz / 9600bps) -1 for the plasma softcore processor
 
 
