@@ -11,6 +11,12 @@
 
 #include "../Includes/uart_pmod.h"
 
+int my_strcmp (const char* s1, const char* s2)
+{
+    while (*s1 != '\0' && (*s1++ == *s2++));
+    return (*((unsigned char *)--s1) < *((unsigned char *)--s2)) ? -1 : (*(unsigned char *)s1 != *(unsigned char *)s2);
+}
+
 struct Gps_Data_GPGGA{
     char utc_time[11];
     char latitude[10];
@@ -39,9 +45,9 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
     getline_pmod(data, 99);
     int i = 7;
 	int v = 6;
-    if(data[0] = '$'){
+    if(data[0] == '$'){
 		char inst[6] = {data[1], data[2], data[3], data[4], data[5], '\0'};
-		if(my_strcmp(inst, "GPGGA"){
+		if(my_strcmp(inst, "GPGGA")){
 			while(data[i] != ','){
 				_gpsdat->utc_time[i-v-1] = data[i];
 				i++;
@@ -121,12 +127,6 @@ void Gps_Display_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 	puts("\n");
 	my_printf("Fix : ", _gpsdat->fix);
 	my_printf("Satellites : ", _gpsdat->sats);
-}
-
-int my_strcmp (const char* s1, const char* s2)
-{
-    while (*s1 != '\0' && (*s1++ == *s2++));
-    return (*((unsigned char *)--s1) < *((unsigned char *)--s2)) ? -1 : (*(unsigned char *)s1 != *(unsigned char *)s2);
 }
 
 #endif //C_GPS_H

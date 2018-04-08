@@ -12,6 +12,14 @@
 #define MemoryRead(A)     (*(volatile unsigned int*)(A))
 #define MemoryWrite(A,V) *(volatile unsigned int*)(A)=(V)
 
+int putchar_pmod(int value)
+{
+    while((MemoryRead(UART_PMOD_STATUS) & UART_PMOD_WRITE_AVAILABLE) == 0)
+        ;
+    MemoryWrite(UART_PMOD_WRITE, value);
+    return 0;
+}
+
 int puts_pmod(const char *string)
 {
     while(*string)
@@ -32,14 +40,6 @@ int getch_pmod(void)
 {
     while(!kbhit_pmod()) ;
     return MemoryRead(UART_PMOD_READ);
-}
-
-int putchar_pmod(int value)
-{
-    while((MemoryRead(UART_PMOD_STATUS) & UART_PMOD_WRITE_AVAILABLE) == 0)
-        ;
-    MemoryWrite(UART_PMOD_WRITE, value);
-    return 0;
 }
 
 int getline_pmod(char *string, int n){
