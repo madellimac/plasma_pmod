@@ -34,8 +34,6 @@ entity uart_pmod is
 end; --entity uart_pmod
 
 architecture logic of uart_pmod is
-
-   signal reg_debug       : std_logic_vector(7 downto 0);
    
    component UART_recv 
       Port ( 
