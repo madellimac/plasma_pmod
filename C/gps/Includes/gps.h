@@ -66,7 +66,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 			_gpsdat->utc_time[i-v-1] = '\0';
 			v = i;
 			i++;
-			
+
 			while(data[i] != ','){
 				_gpsdat->latitude[i-v-1] = data[i];
 				i++;
@@ -74,7 +74,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 			_gpsdat->latitude[i-v-1] = '\0';
 			v = i;
 			i++;
-			
+
 			while(data[i] != ','){
 				_gpsdat->vert[i-v-1] = data[i];
 				i++;
@@ -82,7 +82,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 			_gpsdat->vert[i-v-1] = '\0';
 			v = i;
 			i++;
-			
+
 			while(data[i] != ','){
 				_gpsdat->longitude[i-v-1] = data[i];
 				i++;
@@ -90,7 +90,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 			_gpsdat->longitude[i-v-1] = '\0';
 			v = i;
 			i++;
-			
+
 			while(data[i] != ','){
 				_gpsdat->horz[i-v-1] = data[i];
 				i++;
@@ -98,7 +98,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 			_gpsdat->horz[i-v-1] = '\0';
 			v = i;
 			i++;
-			
+
 			while(data[i] != ','){
 				fixed[i-v-1] = data[i];
 				i++;
@@ -107,7 +107,7 @@ int Gps_Get_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 			_gpsdat->fix = my_atoi(fixed);
 			v = i;
 			i++;
-			
+
 			while(data[i] != ','){
 				sats[i-v-1] = data[i];
 				i++;
@@ -132,8 +132,8 @@ void Gps_Display_GPGGA(struct Gps_Data_GPGGA* _gpsdat){
 	puts(_gpsdat->vert);
 	puts("\n");
 	puts("Longitude :");
-	puts(_gpsdat->horz);	
 	puts(_gpsdat->longitude);
+  puts(_gpsdat->horz);
 	puts("\n");
 	my_printf("Fix : ", _gpsdat->fix);
 	my_printf("Satellites : ", _gpsdat->sats);
