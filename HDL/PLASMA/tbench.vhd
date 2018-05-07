@@ -42,6 +42,7 @@ ARCHITECTURE logic OF tbench IS
     SIGNAL no_ddr_stop	: STD_LOGIC;
     SIGNAL byte_we	: STD_LOGIC_VECTOR(3 DOWNTO 0);
     SIGNAL uart_write	: STD_LOGIC;
+    SIGNAL uart_pmod_write	: STD_LOGIC;
     SIGNAL gpioA_in	: STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
 
     --
@@ -164,6 +165,7 @@ BEGIN  --architecture
 	    memory_type => memory_type,
 	    ethernet	=> '1',
 	    eUart	=> '1',
+	    eUartPmod => '1',
 	    eButtons    => '1',
 	    eRGBOLED    => '1',
 	    eSwitchLED  => '1',
@@ -178,6 +180,8 @@ BEGIN  --architecture
 	    reset	    => reset,
 	    uart_read	    => uart_write,
 	    uart_write	    => uart_write,
+	    uart_pmod_read	    => uart_pmod_write,
+	    uart_pmod_write	    => uart_pmod_write,
 	    address	    => open,
 	    byte_we	    => open,
 	    --data_write	    => open,
