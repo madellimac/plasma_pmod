@@ -1,12 +1,14 @@
+
 #include "../Includes/gps.h"
 #include "../../shared/plasmaSoPCDesign.h"
 #include "../../shared/plasma.h"
 
 #define DEBUG 0
 
+
 int main(int argc, char ** argv)
 {
-    MemoryWrite(CTRL_SL_RST, 1);
+  MemoryWrite(CTRL_SL_RST, 1);
 	unsigned int value = 0;
 	
 	struct Gps_Data_GPGGA gpsdat;

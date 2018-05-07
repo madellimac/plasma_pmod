@@ -10,6 +10,7 @@
 --    
 -- DESCRIPTION:
 --    Implements the UART for pmod junctions. Uses files designed and written by Yannick Bornat.
+
 ---------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
@@ -17,6 +18,7 @@ use ieee.std_logic_misc.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_textio.all;
 use ieee.std_logic_unsigned.all;
+
 
 
 entity uart_pmod is
@@ -33,8 +35,7 @@ entity uart_pmod is
         data_avail   : out std_logic);
 end; --entity uart_pmod
 
-architecture logic of uart_pmod is
-   
+architecture logic of uart_pmod is   
    component UART_recv 
       Port ( 
              clk    : in  STD_LOGIC;
