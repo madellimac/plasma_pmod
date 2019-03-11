@@ -14,7 +14,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.mlite_pack.all;
 
-entity coproc_1 is
+entity coproc_3 is
    port(
 		clock          : in  std_logic;
 		reset          : in  std_logic;
@@ -24,10 +24,10 @@ entity coproc_1 is
 	);
 end; --comb_alu_1
 
-architecture logic of coproc_1 is
+architecture logic of coproc_3 is
 	SIGNAL mem : UNSIGNED(31 downto 0);
-	
 begin
+	
 	-------------------------------------------------------------------------
 	process (clock, reset)
 	begin

@@ -14,37 +14,28 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.mlite_pack.all;
 
-entity coproc_1 is
+entity function_11 is
    port(
-		clock          : in  std_logic;
-		reset          : in  std_logic;
-		INPUT_1        : in  std_logic_vector(31 downto 0);
-		INPUT_1_valid  : in  std_logic;
-		OUTPUT_1       : out std_logic_vector(31 downto 0)
+		INPUT_1  : in  std_logic_vector(31 downto 0);
+		INPUT_2  : in  std_logic_vector(31 downto 0);
+		OUTPUT_1 : out std_logic_vector(31 downto 0)
 	);
 end; --comb_alu_1
 
-architecture logic of coproc_1 is
-	SIGNAL mem : UNSIGNED(31 downto 0);
-	
+architecture logic of function_11 is
 begin
+	
 	-------------------------------------------------------------------------
-	process (clock, reset)
+	computation : process (INPUT_1, INPUT_2)
+		variable rTemp1  : UNSIGNED(31 downto 0);
+		variable rTemp2  : UNSIGNED(31 downto 0);
+		variable rTemp3  : UNSIGNED(31 downto 0);
 	begin
-		IF clock'event AND clock = '1' THEN
-			IF reset = '1' THEN
-				mem <= TO_UNSIGNED( 0, 32);
-			ELSE
-				IF INPUT_1_valid = '1' THEN
-					mem <= UNSIGNED(INPUT_1) + TO_UNSIGNED( 3, 32);
-				ELSE
-					mem <= mem;
-				END IF;
-			END IF;
-		END IF;
+		rTemp1 := UNSIGNED( INPUT_1 );
+		rTemp2 := UNSIGNED( INPUT_2 );
+		rTemp3 := rTemp1 + rTemp2 + TO_UNSIGNED(11, 32);
+		OUTPUT_1 <= STD_LOGIC_VECTOR( rTemp3 );
 	end process;
 	-------------------------------------------------------------------------
-
-	OUTPUT_1 <= STD_LOGIC_VECTOR( mem );
 
 end; --architecture logic

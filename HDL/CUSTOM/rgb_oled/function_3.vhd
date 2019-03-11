@@ -14,37 +14,35 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.mlite_pack.all;
 
-entity coproc_1 is
+entity function_3 is
    port(
-		clock          : in  std_logic;
-		reset          : in  std_logic;
-		INPUT_1        : in  std_logic_vector(31 downto 0);
-		INPUT_1_valid  : in  std_logic;
-		OUTPUT_1       : out std_logic_vector(31 downto 0)
+		INPUT_1  : in  std_logic_vector(31 downto 0);
+		INPUT_2  : in  std_logic_vector(31 downto 0);
+		OUTPUT_1 : out std_logic_vector(31 downto 0)
 	);
 end; --comb_alu_1
 
-architecture logic of coproc_1 is
-	SIGNAL mem : UNSIGNED(31 downto 0);
-	
+architecture logic of function_3 is
+
 begin
+	
 	-------------------------------------------------------------------------
-	process (clock, reset)
+	computation : process (INPUT_1, INPUT_2)
+		variable data  : UNSIGNED(7 downto 0);
+		variable mini  : UNSIGNED(7 downto 0);
+		variable diff : UNSIGNED(7 downto 0);
+		variable mult : UNSIGNED(23 downto 0);
+		variable beta  : UNSIGNED(15 downto 0);
 	begin
-		IF clock'event AND clock = '1' THEN
-			IF reset = '1' THEN
-				mem <= TO_UNSIGNED( 0, 32);
-			ELSE
-				IF INPUT_1_valid = '1' THEN
-					mem <= UNSIGNED(INPUT_1) + TO_UNSIGNED( 3, 32);
-				ELSE
-					mem <= mem;
-				END IF;
-			END IF;
-		END IF;
+		data := UNSIGNED( INPUT_1(7 downto 0) ); 
+		mini := UNSIGNED( INPUT_2(7 downto 0) );
+		beta := UNSIGNED( INPUT_2(31 downto 16) );
+		diff := data - mini; -- 8
+		mult := diff * beta; -- 24
+		OUTPUT_1(7 downto 0) <= std_logic_vector(mult(15 downto 8));
+		OUTPUT_1(31 downto 8) <= (others => '0');
+		
 	end process;
 	-------------------------------------------------------------------------
-
-	OUTPUT_1 <= STD_LOGIC_VECTOR( mem );
 
 end; --architecture logic
