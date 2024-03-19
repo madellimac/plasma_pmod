@@ -150,6 +150,15 @@ BUILD_DIRS += $(OBJ)/tsi
 BUILD_BINS += $(BIN)/tsi.bin
 PROJECTS += $(TSI)
 
+MNIST_SE = $(BIN)/mnist_se.bin
+MNIST_SE_HDL = $(BIN)/mnist_se.txt
+MNIST_SE_FILES = main.c
+MNIST_SE_SOURCES = $(addprefix $(C)/mnist_se/Sources/,$(MNIST_SE_FILES))
+MNIST_SE_OBJECTS = $(addprefix $(OBJ)/mnist_se/,$(MNIST_SE_FILES:.c=.o))
+BUILD_DIRS += $(OBJ)/mnist_se
+BUILD_BINS += $(BIN)/mnist_se.bin
+PROJECTS += $(MNIST_SE)
+
 # Plasma SoC
 
 PLASMA_SOC = $(BIN)/plasma.bit
@@ -217,8 +226,8 @@ BUILD_DIRS += $(OBJ)/plasma
 
 # Configuration
 
-CONFIG_PROJECT ?= tsi
-CONFIG_TARGET ?= nexys4
+CONFIG_PROJECT ?= mnist_se
+CONFIG_TARGET ?= nexys4_DDR
 CONFIG_PART ?= xc7a100tcsg324-1
 CONFIG_SERIAL ?= /dev/ttyUSB1
 CONFIG_UART ?= yes
@@ -260,6 +269,9 @@ PROJECT_HDL = $(I2C_HDL)
 else ifeq ($(CONFIG_PROJECT),tsi)
 PROJECT = $(TSI)
 PROJECT_HDL = $(TSI_HDL)
+else ifeq ($(CONFIG_PROJECT),mnist_se)
+PROJECT = $(MNIST_SE)
+PROJECT_HDL = $(MNIST_SE_HDL)
 endif
 
 PLASMA_SOC_GENERICS =
@@ -524,8 +536,27 @@ $(TSI_HDL): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(TSI_OBJECTS) $(CONVERT_BIN
 	$(CONVERT_BIN) $(OBJ)/tsi/tsi_hdl.axf $(OBJ)/tsi/tsi_hdl.bin $(OBJ)/tsi/tsi_hdl.txt
 	cp $(OBJ)/tsi/tsi_hdl.txt $@
 
+.PHONY: MNIST_se
+mnist_se: $(I2C) $(I2C_HDL)
+
+$(MNIST_SE_OBJECTS): $(OBJ)/mnist_se/%.o: $(C)/mnist_se/Sources/%.c | $(BUILD_DIRS)
+	$(CC_MIPS) $(CFLAGS_MIPS) -o $@ $<
+
+$(MNIST_SE): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(MNIST_SE_OBJECTS) $(CONVERT_BIN) | $(BUILD_DIRS)
+	$(LD_MIPS) -Ttext $(ENTRY_LOAD) -eentry -Map $(OBJ)/mnist_se/mnist_se.map -s -N -o $(OBJ)/mnist_se/mnist_se.axf $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(MNIST_SE_OBJECTS)
+	$(CONVERT_BIN) $(OBJ)/mnist_se/mnist_se.axf $(OBJ)/mnist_se/mnist_se.bin $(OBJ)/mnist_se/mnist_se.txt
+	cp $(OBJ)/mnist_se/mnist_se.bin $@
+
+$(MNIST_SE_HDL): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(MNIST_SE_OBJECTS) $(CONVERT_BIN) | $(BUILD_DIRS)
+	$(LD_MIPS) -Ttext $(ENTRY_HDL) -eentry -Map $(OBJ)/mnist_se/mnist_se_hdl.map -s -N -o $(OBJ)/mnist_se/mnist_se_hdl.axf $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(MNIST_SE_OBJECTS)
+	$(CONVERT_BIN) $(OBJ)/mnist_se/mnist_se_hdl.axf $(OBJ)/mnist_se/mnist_se_hdl.bin $(OBJ)/mnist_se/mnist_se_hdl.txt
+	cp $(OBJ)/mnist_se/mnist_se_hdl.txt $@
+
 .PHONY: tsi
 tsi: $(TSI) $(TSI_HDL)
+
+.PHONY: mnist_se
+mnist_se: $(MNIST_SE) $(MNIST_SE_HDL)
 
 .PHONY: project
 project: $(PROJECT) $(PROJECT_HDL)
