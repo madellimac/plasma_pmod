@@ -96,7 +96,7 @@ int weightsFull[15680];
 int biasFull[10];
 
 int main(int argc, char **argv) {
-
+	puts("Start program mnist_se\n"); 
 	int r, g, b, pixel, coeff;
 	unsigned int start_c, stop_c;
 	
@@ -109,7 +109,7 @@ int main(int argc, char **argv) {
 	MemoryWrite(SEVEN_SEGMENT_RST, 1); // reset the 7 segment controler
 	MemoryWrite(CTRL_SL_RST, 1); // reset the sw/led controler
 
-	
+	puts("Initialize screen\n");
 	for(int py = 0; py < HEIGHT; py++)
 	{
 		for(int px = 0; px < WIDTH; px ++){
@@ -123,8 +123,20 @@ int main(int argc, char **argv) {
 	// Read and store values coming from the UART
 	/**********/
 	
-	int images_number = wait_data();
+	puts("Wait for image number\n");
 
+	int images_number;
+	// while(1){
+	// 	images_number = wait_data();
+	// 	my_printf("images number =", images_number);
+	// 	MemoryWrite(CTRL_SL_RW, images_number);
+	// }
+	
+	images_number = wait_data();
+	my_printf("images number =", images_number);
+	MemoryWrite(CTRL_SL_RW, images_number);
+
+	puts("Wait for image\n");
 	MemoryWrite(SEVEN_SEGMENT_REG, 1);
 	for (int image = 0; image < images_number; image++)
 	{
@@ -139,9 +151,10 @@ int main(int argc, char **argv) {
 				images[image].pixels[py + 1][px + 1] = pixel;
 			}
 		}
-	
 	}
+	puts("image loaded\n");
 
+	puts("Wait for Weights 1\n");
 	MemoryWrite(SEVEN_SEGMENT_REG, 11);
 	
 	for(int coeff_num=0; coeff_num<16*1*5*5; coeff_num++){
@@ -159,6 +172,7 @@ int main(int argc, char **argv) {
 		weights1[coeff_num] = coeff1 + coeff2 + coeff3 + coeff4;
 	}
 
+	puts("Read bias 1\n");
 	MemoryWrite(SEVEN_SEGMENT_REG, 12);
 	for(int coeff_num=0; coeff_num<16; coeff_num++){
 		int coeff1 = wait_data();
@@ -173,6 +187,8 @@ int main(int argc, char **argv) {
 		bias1[coeff_num] = coeff1 + coeff2 + coeff3 + coeff4;
 
 	}
+
+	puts("Read weights 2\n");
 	MemoryWrite(SEVEN_SEGMENT_REG, 13);
 	for(int coeff_num=0; coeff_num<32*16*5*5; coeff_num++){
 		int coeff1 = wait_data();
@@ -187,6 +203,8 @@ int main(int argc, char **argv) {
 
 		weights2[coeff_num] = coeff1 + coeff2 + coeff3 + coeff4;
 	}
+
+	puts("Read biais 2\n");
 	MemoryWrite(SEVEN_SEGMENT_REG, 14);
 	for(int coeff_num=0; coeff_num<32; coeff_num++){
 		int coeff1 = wait_data();
@@ -200,6 +218,8 @@ int main(int argc, char **argv) {
 
 		bias2[coeff_num] = coeff1 + coeff2 + coeff3 + coeff4;
 	}
+
+	puts("Read weights FC\n");
 MemoryWrite(SEVEN_SEGMENT_REG, 15);
 	for(int coeff_num=0; coeff_num<15680; coeff_num++){
 		int coeff1 = wait_data();
@@ -214,6 +234,8 @@ MemoryWrite(SEVEN_SEGMENT_REG, 15);
 
 		weightsFull[coeff_num] = coeff1 + coeff2 + coeff3 + coeff4;
 	}
+
+	puts("Read bias FC\n");
 	MemoryWrite(SEVEN_SEGMENT_REG, 16);
 	for(int coeff_num=0; coeff_num<10; coeff_num++){
 		int coeff1 = wait_data();
@@ -225,8 +247,8 @@ MemoryWrite(SEVEN_SEGMENT_REG, 15);
 		int coeff4 = wait_data();
 		coeff4 = coeff4 << 0;
 
-		biasFull[coeff_num] = coeff1 + coeff2 + coeff3 + coeff4;
-	}
+ 		biasFull[coeff_num] = coeff1 + coeff2 + coeff3 + coeff4;
+ 	}
 	
 	//filtres[0].pixels = { {1, 1, 0, -1, -1},{1, 1, 0, -1, -1}, {2, 2, 0, -2, -2},{1, 1, 0, -1, -1}, {1, 1, 0, -1, -1} };
 	//filtres[0].coeff = {{1, 0, -1}, {2, 0, -2},{1, 0, -1}};
@@ -242,15 +264,13 @@ MemoryWrite(SEVEN_SEGMENT_REG, 15);
 	
 	
 	// Convolution 
-	
-	
-	for (int image = 0; image < images_number; image++)
+		for (int image = 0; image < images_number; image++)
 	{
-		
+		puts("Exec conv\n");		
 		convolution(&(images[image]), filtre);
 
 	}
-	
+	puts("conv done\n");
 	// Read the timer value after the processing is over
 	stop_c = r_timer();
 	MemoryWrite(SEVEN_SEGMENT_REG, (stop_c - start_c));
@@ -260,7 +280,7 @@ MemoryWrite(SEVEN_SEGMENT_REG, 15);
 	/**********/
 
 	MemoryWrite(OLED_BITMAP_RST, 1); // Reset the oled_rgb PMOD
-	MemoryWrite(SEVEN_SEGMENT_REG, images_number);
+	//MemoryWrite(SEVEN_SEGMENT_REG, images_number);
 
 	
 	int i = 0;
@@ -270,8 +290,8 @@ MemoryWrite(SEVEN_SEGMENT_REG, 15);
 		if (MemoryRead(BUTTONS_CHANGE) == 1 && MemoryRead(BUTTONS_VALUES)==1)
 		{
 			sleep(1000);
-			MemoryWrite(SEVEN_SEGMENT_RST, 1); // reset the 7 segment controler
-			MemoryWrite(SEVEN_SEGMENT_REG, remaining_images);
+			// MemoryWrite(SEVEN_SEGMENT_RST, 1); // reset the 7 segment controler
+			// MemoryWrite(SEVEN_SEGMENT_REG, remaining_images);
 			for (int py = 0; py < HEIGHT; py++)
 			{
 				for (int px = 0; px < WIDTH; px++) {
@@ -285,7 +305,7 @@ MemoryWrite(SEVEN_SEGMENT_REG, 15);
 		}
 		//sleep(3000); // 3s
 	}
-	MemoryWrite(SEVEN_SEGMENT_REG, remaining_images);
+	// MemoryWrite(SEVEN_SEGMENT_REG, remaining_images);
 	
 	/*
 	
