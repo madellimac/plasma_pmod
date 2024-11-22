@@ -159,6 +159,15 @@ BUILD_DIRS += $(OBJ)/mnist_se
 BUILD_BINS += $(BIN)/mnist_se.bin
 PROJECTS += $(MNIST_SE)
 
+BLE = $(BIN)/ble.bin
+BLE_HDL = $(BIN)/ble.txt
+BLE_FILES = main.c
+BLE_SOURCES = $(addprefix $(C)/ble/Sources/,$(HELLO_FILES))
+BLE_OBJECTS = $(addprefix $(OBJ)/ble/,$(HELLO_FILES:.c=.o))
+BUILD_DIRS += $(OBJ)/ble
+BUILD_BINS += $(BIN)/ble.bin
+PROJECTS += $(BLE)
+
 # Plasma SoC
 
 PLASMA_SOC = $(BIN)/plasma.bit
@@ -226,7 +235,7 @@ BUILD_DIRS += $(OBJ)/plasma
 
 # Configuration
 
-CONFIG_PROJECT ?= mnist_se
+CONFIG_PROJECT ?= ble
 CONFIG_TARGET ?= nexys4_DDR
 CONFIG_PART ?= xc7a100tcsg324-1
 CONFIG_SERIAL ?= /dev/ttyUSB1
@@ -272,6 +281,9 @@ PROJECT_HDL = $(TSI_HDL)
 else ifeq ($(CONFIG_PROJECT),mnist_se)
 PROJECT = $(MNIST_SE)
 PROJECT_HDL = $(MNIST_SE_HDL)
+else ifeq ($(CONFIG_PROJECT),ble)
+PROJECT = $(BLE)
+PROJECT_HDL = $(BLE_HDL)
 endif
 
 PLASMA_SOC_GENERICS =
@@ -393,7 +405,7 @@ $(HELLO_HDL): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(HELLO_OBJECTS) $(CONVERT
 	cp $(OBJ)/hello/hello_hdl.txt $@
 
 .PHONY: hello
-hello: $(PROJET_E2) $(PROJET_E2_HDL)
+hello: $(HELLO) $(HELLO_HDL)
 
 $(PROJET_E2_OBJECTS): $(OBJ)/projet_e2/%.o: $(C)/projet_e2/Sources/%.c | $(BUILD_DIRS)
 	$(CC_MIPS) $(CFLAGS_MIPS) -o $@ $<
@@ -521,7 +533,7 @@ $(I2C_HDL): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(I2C_OBJECTS) $(CONVERT_BIN
 	cp $(OBJ)/i2c/i2c_hdl.txt $@
 
 .PHONY: i2c
-tsi: $(I2C) $(I2C_HDL)
+i2c: $(I2C) $(I2C_HDL)
 
 $(TSI_OBJECTS): $(OBJ)/tsi/%.o: $(C)/tsi/Sources/%.c | $(BUILD_DIRS)
 	$(CC_MIPS) $(CFLAGS_MIPS) -o $@ $<
@@ -536,8 +548,8 @@ $(TSI_HDL): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(TSI_OBJECTS) $(CONVERT_BIN
 	$(CONVERT_BIN) $(OBJ)/tsi/tsi_hdl.axf $(OBJ)/tsi/tsi_hdl.bin $(OBJ)/tsi/tsi_hdl.txt
 	cp $(OBJ)/tsi/tsi_hdl.txt $@
 
-.PHONY: MNIST_se
-mnist_se: $(I2C) $(I2C_HDL)
+.PHONY: tsi
+tsi: $(TSI) $(TSI_HDL)
 
 $(MNIST_SE_OBJECTS): $(OBJ)/mnist_se/%.o: $(C)/mnist_se/Sources/%.c | $(BUILD_DIRS)
 	$(CC_MIPS) $(CFLAGS_MIPS) -o $@ $<
@@ -552,11 +564,24 @@ $(MNIST_SE_HDL): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(MNIST_SE_OBJECTS) $(C
 	$(CONVERT_BIN) $(OBJ)/mnist_se/mnist_se_hdl.axf $(OBJ)/mnist_se/mnist_se_hdl.bin $(OBJ)/mnist_se/mnist_se_hdl.txt
 	cp $(OBJ)/mnist_se/mnist_se_hdl.txt $@
 
-.PHONY: tsi
-tsi: $(TSI) $(TSI_HDL)
-
 .PHONY: mnist_se
 mnist_se: $(MNIST_SE) $(MNIST_SE_HDL)
+
+$(BLE_OBJECTS): $(OBJ)/ble/%.o: $(C)/ble/Sources/%.c | $(BUILD_DIRS)
+	$(CC_MIPS) $(CFLAGS_MIPS) -o $@ $<
+
+$(BLE): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(BLE_OBJECTS) $(CONVERT_BIN) | $(BUILD_DIRS)
+	$(LD_MIPS) -Ttext $(ENTRY_LOAD) -eentry -Map $(OBJ)/ble/ble.map -s -N -o $(OBJ)/ble/ble.axf $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(BLE_OBJECTS)
+	$(CONVERT_BIN) $(OBJ)/ble/ble.axf $(OBJ)/ble/ble.bin $(OBJ)/ble/ble.txt
+	cp $(OBJ)/ble/ble.bin $@
+
+$(BLE_HDL): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(BLE_OBJECTS) $(CONVERT_BIN) | $(BUILD_DIRS)
+	$(LD_MIPS) -Ttext $(ENTRY_HDL) -eentry -Map $(OBJ)/ble/ble_hdl.map -s -N -o $(OBJ)/ble/ble_hdl.axf $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(BLE_OBJECTS)
+	$(CONVERT_BIN) $(OBJ)/ble/ble_hdl.axf $(OBJ)/ble/ble_hdl.bin $(OBJ)/ble/ble_hdl.txt
+	cp $(OBJ)/ble/ble_hdl.txt $@
+
+.PHONY: ble
+ble: $(BLE) $(BLE_HDL)
 
 .PHONY: project
 project: $(PROJECT) $(PROJECT_HDL)
